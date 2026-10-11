@@ -1,7 +1,7 @@
 
 import { NavLink, Link, useLocation, useOutlet, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
-import { Wallet, Palette, BarChart3, Users, LogOut, KeyRound, Plus, Menu as MenuIcon, LogIn, Eye, Download } from 'lucide-react'
+import { Wallet, Palette, BarChart3, Users, LogOut, KeyRound, Plus, Menu as MenuIcon, LogIn, Eye, Download, Coins } from 'lucide-react'
 import { useAuth, roleLabel } from '../context/AuthContext'
 
 import { t, LangSwitch } from '../i18n'
@@ -11,6 +11,8 @@ import { pageVariants, confirmDialog, cx, Button } from './ui'
 import { forms, startInstall } from '../fund/Forms'
 import { useInstall } from '../pwa'
 import LogoMark from './Logo'
+import { useFund } from '../fund/Context'
+import { inr } from '../lib/format'
 
 const NAV = [
   { to: '/', key: 'month', icon: Wallet, end: true },
@@ -32,7 +34,7 @@ function Logo() {
     <Link to="/" aria-label={t("appName")} className="flex min-w-0 items-center gap-3">
       <LogoMark className="size-10 shrink-0" />
       <div className="min-w-0 leading-tight">
-        <p className="text-base font-bold text-fg">{t('appName')}</p>
+        <p className="text-base font-bold text-fg">{t('appShortName')}</p>
         <p className="truncate text-xs text-muted">{t('appSub')}</p>
       </div>
     </Link>
@@ -41,6 +43,7 @@ function Logo() {
 
 export default function Layout() {
   const { profile, isLoggedIn, isAdmin, signOut } = useAuth()
+  const { monthlyAmount } = useFund()
 
   const location = useLocation()
   const navigate = useNavigate()
@@ -106,6 +109,7 @@ export default function Layout() {
                 <Button variant="secondary" size="sm" icon={KeyRound} onClick={() => forms.open('password')} className="truncate">{t('pw.short')}</Button>
                 <Button variant="dangerSoft" size="sm" icon={LogOut} onClick={logout} className="truncate">{t('signOut')}</Button>
               </div>
+              <Button variant="secondary" size="sm" icon={Coins} className="w-full" onClick={()=>forms.open('monthlyAmount')}>{t('fund.monthlyAmount')} · {inr(monthlyAmount)}</Button>
             </>
           ) : (
             <div className="space-y-2">
@@ -121,7 +125,7 @@ export default function Layout() {
         {/* Slim phone top bar: logo and name. Pages put extra info in the two slots (Accounts: wing picker and balance). */}
         <header className="z-30 flex shrink-0 items-center gap-2 border-b border-bar-line bg-bar px-4 pb-1.5 pt-[calc(0.375rem+env(safe-area-inset-top))] lg:hidden">
           <LogoMark className="size-6 shrink-0" />
-          <p className="min-w-0 text-sm font-bold leading-tight text-fg">{t('appName')}</p>
+          <p title={t('appName')} className="min-w-0 text-sm font-bold leading-tight text-fg">{t('appShortName')}</p>
           <div id="topbar-left" className="contents" />
           <div id="topbar-right" className="ml-auto flex shrink-0 items-center" />
         </header>
