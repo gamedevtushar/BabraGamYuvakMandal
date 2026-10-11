@@ -1,14 +1,13 @@
 {
-  "name": "astha-residency-maintenance",
+  "name": "babragam-yuvak-mandal",
   "private": true,
   "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "demo": "vite --config vite.demo.config.js",
     "build": "vite build",
     "preview": "vite preview",
-    "deploy:rules": "node scripts/build-rules.mjs && firebase deploy --only firestore"
+    "test": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "firebase": "^12.19.0",
