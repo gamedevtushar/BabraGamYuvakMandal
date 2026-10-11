@@ -1,4 +1,6 @@
 export const en = {
+ 'fund.nameGu':'Name in Gujarati', 'fund.discardTitle':'Discard changes?', 'fund.discardMessage':'Your unsaved changes will be lost.', 'fund.discard':'Discard',
+ 'fund.exitTitle':'Close app?', 'fund.exitQuestion':'Do you want to close the app?', 'fund.exit':'Close app', 'fund.closed':'App closed', 'fund.closeHint':'You can close this window or reopen the app.', 'fund.reopen':'Reopen app',
  edit:'Edit', 'login.showPassword':'Show password', 'login.hidePassword':'Hide password',
  appName:'Babra Gam Yuvak Mandal', appSub:'Family charity fund', 'nav.units':'Members', 'nav.unitsShort':'Members',
  'fund.admin':'Fund admin', 'fund.members':'Members', 'fund.contributions':'Contributions', 'fund.expenses':'Expenses',
@@ -22,6 +24,8 @@ export const en = {
  offline:'You are offline. Reconnect before saving new changes.',
 }
 export const gu = {
+ 'fund.nameGu':'ગુજરાતીમાં નામ', 'fund.discardTitle':'ફેરફારો રદ કરવા છે?', 'fund.discardMessage':'સાચવ્યા વગરના ફેરફારો ગુમાવશો.', 'fund.discard':'ફેરફારો છોડો',
+ 'fund.exitTitle':'એપ બંધ કરવી છે?', 'fund.exitQuestion':'શું તમે એપ બંધ કરવા માંગો છો?', 'fund.exit':'એપ બંધ કરો', 'fund.closed':'એપ બંધ થઈ ગઈ', 'fund.closeHint':'આ વિન્ડો બંધ કરો અથવા એપ ફરી ખોલો.', 'fund.reopen':'એપ ફરી ખોલો',
  edit:'ફેરફાર', 'login.showPassword':'પાસવર્ડ બતાવો', 'login.hidePassword':'પાસવર્ડ છુપાવો',
  appName:'બાબરા ગામ યુવક મંડળ', appSub:'પરિવારનું સેવા ફંડ', 'nav.units':'સભ્યો', 'nav.unitsShort':'સભ્યો',
  'fund.admin':'ફંડ એડમિન', 'fund.members':'સભ્યો', 'fund.contributions':'ફાળો', 'fund.expenses':'ખર્ચ',

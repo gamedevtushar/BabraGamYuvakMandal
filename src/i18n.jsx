@@ -1,6 +1,7 @@
 import { en as fundEn, gu as fundGu } from './fund/messages'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { applyTheme } from './theme'
+import { memberName } from './fund/memberNames'
 import { motion } from 'motion/react'
 
 /**
@@ -311,6 +312,7 @@ export function wingTitle(name) {
 
 /** Translate a value stored in English in the database (category, payment mode) */
 export const tv = (value) => (value ? DICTS[current][`v.${value}`] ?? value : value)
+export const displayName = member => memberName(member, current)
 
 export const locale = () => LANGUAGES.find((l) => l.code === current).locale
 

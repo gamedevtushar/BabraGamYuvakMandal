@@ -6,7 +6,7 @@ import { Wallet, Users, Plus, Check, Minus, ChevronRight, ArrowDownCircle, Arrow
 import { useAuth } from '../context/AuthContext'
 import { useFund } from './Context'
 import { forms } from './Forms'
-import { t, tv } from '../i18n'
+import { t, tv, displayName } from '../i18n'
 import { inr, inrShort, periodLabel, shiftPeriod, shortDate, monthName } from '../lib/format'
 import { localDate, monthOf, total, contributionSummary } from '../fundLedger'
 import SnapScroller from '../components/SnapScroller'
@@ -32,7 +32,7 @@ export function EntryList({ rows, emptyTitle=t('fund.empty') }) {
     const incoming=r.kind==='donations'
     return <motion.button key={`${r.kind}-${r.id}`} type="button" disabled={!isAdmin} onClick={()=>forms.open('entry',{kind:r.kind,row:r})} initial={{opacity:0,y:8}} animate={{opacity:1,y:0}} transition={{delay:Math.min(i,14)*.02}} className={cx('flex w-full items-start gap-3 px-4 py-2.5 text-left transition-colors',isAdmin&&'cursor-pointer hover:bg-fg/[0.06]')}>
       <IconTile icon={incoming?ArrowDownCircle:ArrowUpCircle} tone={incoming?'green':'red'} className="size-9" iconClass="size-[1.125rem]" />
-      <div className="min-w-0 flex-1"><p className="font-semibold break-words text-fg">{r.title}</p><p className="text-xs break-words text-muted">{[shortDate(r.date),incoming?tv(({cash:'Cash',upi:'UPI',bank:'Bank Transfer'})[r.paymentMode]||r.paymentMode):r.paidTo].filter(Boolean).join(' · ')}</p></div><p className={cx('shrink-0 pt-0.5 font-bold whitespace-nowrap',incoming?'text-ok':'text-bad')}>{incoming?'+':'−'}{inr(r.amount)}</p></motion.button>
+      <div className="min-w-0 flex-1"><p className="font-semibold break-words text-fg">{incoming?displayName(r.memberName||r.title):r.title}</p><p className="text-xs break-words text-muted">{[shortDate(r.date),incoming?tv(({cash:'Cash',upi:'UPI',bank:'Bank Transfer'})[r.paymentMode]||r.paymentMode):displayName(r.paidTo||'')].filter(Boolean).join(' · ')}</p></div><p className={cx('shrink-0 pt-0.5 font-bold whitespace-nowrap',incoming?'text-ok':'text-bad')}>{incoming?'+':'−'}{inr(r.amount)}</p></motion.button>
   })}</div>
 }
 export function Accounts() {
@@ -50,7 +50,7 @@ export function Accounts() {
   },[donations,expenses,current])
   const inMonth=donations.filter(r=>monthOf(r)===period),outMonth=expenses.filter(r=>monthOf(r)===period)
   const summary=contributionSummary(members,inMonth),{amounts}=summary
-  const people=summary.people.filter(m=>`${m.name} ${m.occupation||''}`.toLowerCase().includes(search.toLowerCase())).sort((a,b)=>(a.name||'').localeCompare(b.name||''))
+  const people=summary.people.filter(m=>`${m.name} ${displayName(m)} ${m.occupation||''}`.toLowerCase().includes(search.toLowerCase())).sort((a,b)=>(a.name||'').localeCompare(b.name||''))
   const balance=total(donations)-total(expenses)
   const rows=rowsFor(summary.otherIncome,outMonth).filter(r=>kind==='all'||r.kind===kind)
   return <LoadState>{slots?.right&&createPortal(<div className="rounded-lg bg-accent/12 px-2.5 py-1 text-right leading-none"><p className="text-[0.625rem] font-semibold text-muted">{t('r.balance')}</p><p className="mt-0.5 text-base font-bold whitespace-nowrap tabular-nums text-accent-ink">{loading||error?'—':inr(balance)}</p></div>,slots.right)}
@@ -64,7 +64,7 @@ export function Accounts() {
           const paid=amounts.has(m.id),amount=(amounts.get(m.id)||0)/100,StatusIcon=paid?Check:Minus
           return <motion.button key={m.id} type="button" onClick={()=>forms.open('memberHistory',{member:m,period})} whileTap={{scale:.98}} initial={{opacity:0,y:5}} animate={{opacity:1,y:0}} transition={{delay:Math.min(i,18)*.015}} className={cx('group flex min-w-0 items-center gap-3 rounded-2xl border p-3 text-left transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',paid?'border-ok/20 bg-ok/[0.06] hover:bg-ok/10':'border-fg/10 bg-fg/[0.02] hover:bg-fg/[0.05]')}>
             <span className={cx('flex size-9 shrink-0 items-center justify-center rounded-full',paid?'bg-ok/15 text-ok':'bg-fg/[0.06] text-subtle')}><StatusIcon className="size-4" strokeWidth={2.5}/></span>
-            <span className="min-w-0 flex-1"><span className="block text-sm font-semibold leading-snug break-words text-fg">{m.name}</span><span className={cx('mt-1 block text-[0.6875rem] font-medium',paid?'text-ok':'text-muted')}>{t(paid?'fund.received':'fund.notContributed')}</span></span>
+            <span className="min-w-0 flex-1"><span className="block text-sm font-semibold leading-snug break-words text-fg">{displayName(m)}</span><span className={cx('mt-1 block text-[0.6875rem] font-medium',paid?'text-ok':'text-muted')}>{t(paid?'fund.received':'fund.notContributed')}</span></span>
             <span className={cx('shrink-0 text-sm font-bold tabular-nums',paid?'text-ok':'text-subtle')}>{paid?inr(amount):'—'}</span><ChevronRight className="size-3.5 shrink-0 text-subtle"/>
           </motion.button>
         })}</div>}
@@ -76,8 +76,8 @@ export function Accounts() {
 }
 export function Members(){
  const {members,donations}=useFund(),{isAdmin}=useAuth();const [search,setSearch]=useState('')
- const filtered=members.filter(m=>`${m.name} ${m.occupation||''}`.toLowerCase().includes(search.toLowerCase())).sort((a,b)=>(a.name||'').localeCompare(b.name||''))
- return <LoadState><PageHeader title={t('fund.members')} subtitle={t('fund.count',{n:members.length})} actions={isAdmin&&<Button icon={Plus} onClick={()=>forms.open('member')}>{t('fund.addMember')}</Button>}/><Input className="mb-4 shrink-0" aria-label={t('searchPh')} placeholder={t('searchPh')} value={search} onChange={e=>setSearch(e.target.value)}/><div className="no-scrollbar min-h-0 overflow-y-auto space-y-2">{!filtered.length?<EmptyState icon={Users} title={t('fund.noMembers')}/>:filtered.map(m=><Card key={m.id} className="flex items-center gap-3 p-3"><IconTile icon={Users}/><button className="min-w-0 flex-1 text-left cursor-pointer" onClick={()=>forms.open('memberHistory',{member:m})}><p className="font-semibold text-fg">{m.name}</p><p className="text-xs text-muted">{[m.occupation,t(m.status==='inactive'?'fund.inactive':'fund.active')].filter(Boolean).join(' · ')}</p>{isAdmin&&m.phone&&<p className="text-xs text-muted">{m.phone}</p>}</button><div className="text-right"><p className="font-semibold text-ok">{inr(total(donations.filter(r=>r.memberId===m.id)))}</p>{isAdmin&&<Button size="sm" variant="ghost" onClick={()=>forms.open('member',{row:m})}>{t('edit')}</Button>}</div></Card>)}</div></LoadState>
+ const filtered=members.filter(m=>`${m.name} ${displayName(m)} ${m.occupation||''}`.toLowerCase().includes(search.toLowerCase())).sort((a,b)=>(a.name||'').localeCompare(b.name||''))
+ return <LoadState><PageHeader title={t('fund.members')} subtitle={t('fund.count',{n:members.length})} actions={isAdmin&&<Button icon={Plus} onClick={()=>forms.open('member')}>{t('fund.addMember')}</Button>}/><Input className="mb-4 shrink-0" aria-label={t('searchPh')} placeholder={t('searchPh')} value={search} onChange={e=>setSearch(e.target.value)}/><div className="no-scrollbar min-h-0 overflow-y-auto space-y-2">{!filtered.length?<EmptyState icon={Users} title={t('fund.noMembers')}/>:filtered.map(m=><Card key={m.id} className="flex items-center gap-3 p-3"><IconTile icon={Users}/><button className="min-w-0 flex-1 text-left cursor-pointer" onClick={()=>forms.open('memberHistory',{member:m})}><p className="font-semibold text-fg">{displayName(m)}</p><p className="text-xs text-muted">{[m.occupation,t(m.status==='inactive'?'fund.inactive':'fund.active')].filter(Boolean).join(' · ')}</p>{isAdmin&&m.phone&&<p className="text-xs text-muted">{m.phone}</p>}</button><div className="text-right"><p className="font-semibold text-ok">{inr(total(donations.filter(r=>r.memberId===m.id)))}</p>{isAdmin&&<Button size="sm" variant="ghost" onClick={()=>forms.open('member',{row:m})}>{t('edit')}</Button>}</div></Card>)}</div></LoadState>
 }
 export function Reports(){
  const {donations,expenses}=useFund(); const current=localDate().slice(0,4);const [year,setYear]=useState(current)

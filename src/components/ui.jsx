@@ -4,6 +4,7 @@ import { motion, AnimatePresence, animate, useMotionValue, useTransform, useDrag
 import { X, Loader2, Inbox, CheckCircle2, AlertCircle, Info, AlertTriangle, WifiOff, ChevronDown, Check, Search, Minus, Plus, MoreVertical } from 'lucide-react'
 import { t } from '../i18n'
 import { inr, today, daysAgo } from '../lib/format'
+import { useBackDismiss } from '../lib/appBack'
 
 export const cx = (...c) => c.filter(Boolean).join(' ')
 
@@ -262,6 +263,7 @@ function useAnchor(open, ref, { minWidth = 0, maxHeight = 300, align = 'start' }
 }
 
 function Popover({ open, onClose, anchorRef, children, minWidth, maxHeight, align, onKeyDown }) {
+  useBackDismiss(onClose, 30, open)
   const pos = useAnchor(open, anchorRef, { minWidth, maxHeight, align })
   useEffect(() => {
     if (!open) return
@@ -508,6 +510,7 @@ function useScrollLock() {
 
 /** Mount conditionally inside <AnimatePresence> to get exit animations. */
 export function Modal({ onClose, title, subtitle, icon, iconTone = 'indigo', children, footer, size = 'md' }) {
+  useBackDismiss(onClose)
   const desktop = useMedia('(min-width: 640px)')
   const drag = useDragControls()
   useScrollLock()
@@ -652,6 +655,7 @@ export function ConfirmHost() {
 }
 
 function ConfirmDialog({ title, message, confirmText, tone = 'danger', onClose }) {
+  useBackDismiss(() => onClose(false), 40)
   useScrollLock()
   useEffect(() => {
     const onKey = (e) => { if (e.key === 'Escape') { e.stopPropagation(); onClose(false) } }

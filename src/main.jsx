@@ -7,11 +7,13 @@ import { HashRouter } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import { LangProvider } from './i18n'
 import FundApp from './FundApp'
+import { installAppBack } from './lib/appBack'
 import './index.css'
 registerServiceWorker()
 applyTheme()
 document.documentElement.dataset.text = getTextSize()
 installTapFeedback()
+installAppBack()
 createRoot(document.getElementById('root')).render(
   <StrictMode><HashRouter><LangProvider><AuthProvider><FundApp /></AuthProvider></LangProvider></HashRouter></StrictMode>
 )
