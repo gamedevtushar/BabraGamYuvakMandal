@@ -119,22 +119,25 @@ body {
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
   transition: background-color 0.25s ease;
+  -webkit-user-select: none;
+  user-select: none;
 }
+input, textarea, [contenteditable="true"] { -webkit-user-select: text; user-select: text; }
 
 /* ---------- Surfaces ---------- */
 @utility glass {
   background: linear-gradient(145deg, var(--clay-top), transparent 48%, var(--clay-bottom)), var(--c-surface);
-  border: 1px solid var(--clay-edge);
+  border: 0;
   box-shadow: var(--clay-shadow);
 }
 @utility glass-strong {
   background: linear-gradient(145deg, var(--clay-top), transparent 48%, var(--clay-bottom)), var(--c-surface);
-  border: 1px solid var(--clay-edge);
+  border: 0;
   box-shadow: 0 24px 60px -20px rgb(0 0 0 / .35), var(--clay-shadow);
 }
 @utility glass-soft {
   background: linear-gradient(145deg, var(--clay-top), transparent 55%, var(--clay-bottom)), var(--c-surface);
-  border: 1px solid var(--clay-edge);
+  border: 0;
   box-shadow: var(--clay-small);
 }
 @utility clay-inset {
@@ -148,16 +151,16 @@ body {
 }
 @utility clay-tile {
   box-shadow: var(--clay-small);
-  border: 1px solid var(--clay-edge);
+  border: 0;
 }
 @utility clay-button {
   background-image: linear-gradient(145deg, rgb(255 255 255 / .22), transparent 55%, rgb(33 12 56 / .14));
   box-shadow: 4px 7px 11px -3px var(--clay-shade), inset 3px 4px 6px rgb(255 255 255 / .32), inset -4px -5px 7px rgb(30 8 54 / .25);
-  border: 1px solid var(--clay-edge);
+  border: 0;
 }
 @utility clay-selected {
   box-shadow: var(--clay-small);
-  border: 1px solid var(--clay-edge);
+  border: 0;
 }
 @utility clay-chip {
   box-shadow: var(--clay-small);
@@ -169,13 +172,13 @@ body {
 }
 @utility clay-member {
   background: linear-gradient(145deg, var(--clay-top), transparent 50%, var(--clay-bottom)), var(--clay-neutral);
-  border: 1px solid var(--clay-edge);
-  box-shadow: var(--clay-small);
-  transition: background-color .15s, box-shadow .15s;
+  border: 0;
+  box-shadow: 4px 7px 12px -4px var(--clay-shade), inset 3px 4px 9px color-mix(in oklab, var(--clay-light) 65%, transparent), inset -3px -5px 9px var(--clay-inner);
+  transition: background-color .22s ease, box-shadow .22s ease;
 }
 @utility clay-member-paid {
   background: linear-gradient(145deg, var(--clay-top), transparent 50%, var(--clay-bottom)), var(--clay-paid);
-  box-shadow: 4px 7px 10px -3px var(--clay-paid-shade), inset 2px 3px 5px var(--clay-light), inset -3px -4px 7px var(--clay-paid-shade);
+  box-shadow: 4px 7px 12px -4px var(--clay-paid-shade), inset 3px 4px 9px color-mix(in oklab, var(--clay-light) 65%, transparent), inset -3px -5px 9px var(--clay-paid-shade);
 }
 @utility shimmer {
   background: linear-gradient(90deg, color-mix(in oklab, var(--c-fg) 5%, transparent) 0%, color-mix(in oklab, var(--c-fg) 11%, transparent) 50%, color-mix(in oklab, var(--c-fg) 5%, transparent) 100%);
@@ -207,7 +210,7 @@ input:-webkit-autofill {
 
 ::selection { background: color-mix(in oklab, var(--c-accent) 30%, transparent); }
 
-.clay-button:active, .clay-chip:active, .clay-member:active { box-shadow: var(--clay-pressed); }
+.clay-button:active, .clay-chip:active, button.clay-member:active { box-shadow: var(--clay-pressed); }
 .clay-ghost:hover { box-shadow: var(--clay-small); }
 .clay-icon-holder { background: none; border: 0; box-shadow: none; }
 .clay-object { overflow: visible; flex-shrink: 0; }

@@ -37,7 +37,7 @@ export function EntryList({ rows, emptyTitle=t('fund.empty') }) {
 }
 export function Accounts() {
   const { members,donations,expenses,loading,error }=useFund(),{isAdmin}=useAuth()
-  const [period,setPeriod]=useState(localDate().slice(0,7)),[search,setSearch]=useState(''),[kind,setKind]=useState('all')
+  const [period,setPeriod]=useState(localDate().slice(0,7)),[kind,setKind]=useState('all')
   const [slots,setSlots]=useState(null)
   useEffect(()=>setSlots({right:document.getElementById('topbar-right')}),[])
   const current=localDate().slice(0,7)
@@ -50,7 +50,8 @@ export function Accounts() {
   },[donations,expenses,current])
   const inMonth=donations.filter(r=>monthOf(r)===period),outMonth=expenses.filter(r=>monthOf(r)===period)
   const summary=contributionSummary(members,inMonth),{amounts}=summary
-  const people=summary.people.filter(m=>`${m.name} ${displayName(m)} ${m.occupation||''}`.toLowerCase().includes(search.toLowerCase())).sort((a,b)=>displayName(a).localeCompare(displayName(b),locale(),{sensitivity:'base'}))
+  const people=[...summary.people].sort((a,b)=>displayName(a).localeCompare(displayName(b),locale(),{sensitivity:'base'}))
+  const MemberCard=isAdmin?motion.button:motion.div
   const balance=total(donations)-total(expenses)
   const rows=rowsFor(summary.otherIncome,outMonth).filter(r=>kind==='all'||r.kind===kind)
   return <LoadState>{slots?.right&&createPortal(<div className="rounded-lg bg-accent/12 px-2.5 py-1 text-right leading-none"><p className="text-[0.625rem] font-semibold text-muted">{t('r.balance')}</p><p className="mt-0.5 text-base font-bold whitespace-nowrap tabular-nums text-accent-ink">{loading||error?'—':inr(balance)}</p></div>,slots.right)}
@@ -59,13 +60,13 @@ export function Accounts() {
       <div className="clay-inset grid grid-cols-4 divide-x divide-fg/10 rounded-2xl py-2"><Figure label={t('fund.received')} value={summary.contributed} amount={false} tone="text-ok"/><Figure label={t('fund.notContributed')} value={summary.notContributed} amount={false}/><Figure label={t('income')} value={total(inMonth)} tone="text-ok"/><Figure label={t('expense')} value={total(outMonth)} tone="text-bad"/></div>
     </div>
     <div className="mb-3 grid gap-3 lg:min-h-0 lg:flex-1 lg:grid-cols-5 lg:gap-4">
-      <ScrollCard className="!min-h-0 lg:col-span-3" bodyClass="p-2.5 sm:p-3" header={<div className="space-y-2 px-3 pt-3"><div className="flex items-center gap-2"><h2 className="flex-1 text-sm font-semibold text-muted">{t('fund.monthlyMembers')}</h2>{isAdmin&&<Button size="sm" variant="success" icon={Plus} onClick={()=>forms.open('entry',{kind:'donations',period})}>{t('fund.addIn')}</Button>}</div><Input aria-label={t('searchPh')} placeholder={t('searchPh')} value={search} onChange={e=>setSearch(e.target.value)} className="!h-9 !text-sm"/></div>}>
+      <ScrollCard className="!min-h-0 lg:col-span-3" bodyClass="p-3 sm:p-4" header={isAdmin&&<div className="flex justify-end px-3 pt-3"><Button size="sm" variant="success" icon={Plus} onClick={()=>forms.open('entry',{kind:'donations',period})}>{t('fund.addIn')}</Button></div>}>
         {!people.length?<EmptyState icon={Users} title={t('fund.noMembers')}/>:<div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">{people.map((m,i)=>{
           const paid=amounts.has(m.id),amount=(amounts.get(m.id)||0)/100
-          return <motion.button key={m.id} type="button" aria-label={`${displayName(m)}, ${t(paid?'fund.received':'fund.notContributed')}${paid?`, ${inr(amount)}`:''}`} onClick={()=>forms.open('memberHistory',{member:m,period})} whileTap={{scale:.98}} initial={{opacity:0,y:5}} animate={{opacity:1,y:0}} transition={{delay:Math.min(i,18)*.015}} className={cx('clay-member group flex min-h-12 min-w-0 items-center gap-2 rounded-2xl px-3.5 py-2.5 text-left cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',paid&&'clay-member-paid')}>
+          return <MemberCard key={m.id} type={isAdmin?'button':undefined} role={isAdmin?undefined:'group'} aria-label={`${displayName(m)}, ${t(paid?'fund.received':'fund.notContributed')}${paid?`, ${inr(amount)}`:''}`} onClick={isAdmin?()=>forms.open('memberHistory',{member:m,period}):undefined} whileTap={isAdmin?{scale:.98}:undefined} initial={{opacity:0,y:5}} animate={{opacity:1,y:0}} transition={{type:'spring',stiffness:300,damping:28,delay:Math.min(i,18)*.012}} className={cx('clay-member flex min-h-12 min-w-0 items-center gap-2 rounded-2xl px-3.5 py-2.5 text-left',isAdmin?'cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent':'cursor-default',paid&&'clay-member-paid')}>
             <span className="min-w-0 flex-1 text-sm font-semibold leading-snug break-words text-fg">{displayName(m)}</span>
-            {paid&&<span className="shrink-0 text-sm font-bold tabular-nums text-ok">{inr(amount)}</span>}<ChevronRight className="size-3.5 shrink-0 text-subtle"/>
-          </motion.button>
+            {paid&&<span className="shrink-0 text-sm font-bold tabular-nums text-ok">{inr(amount)}</span>}{isAdmin&&<ChevronRight className="size-3.5 shrink-0 text-subtle"/>}
+          </MemberCard>
         })}</div>}
       </ScrollCard>
       <ScrollCard className="lg:col-span-2" header={<div className="space-y-2 px-3 pt-3"><div className="flex items-center gap-2"><h2 className="flex-1 text-sm font-semibold text-muted">{t('fund.otherEntries')}</h2>{isAdmin&&<Button size="sm" icon={Plus} onClick={()=>forms.open('entry',{kind:'expenses',period})}>{t('add')}</Button>}</div><div className="flex gap-1">{[['all','all'],['donations','fund.otherIncome'],['expenses','expense']].map(([v,k])=><button key={v} onClick={()=>setKind(v)} aria-pressed={kind===v} className={cx('flex-1 rounded-lg px-2 py-1 text-xs cursor-pointer',kind===v?'bg-accent/12 text-accent-ink font-semibold':'text-muted')}>{t(k)}</button>)}</div></div>}><EntryList rows={rows} emptyTitle={kind==='all'?t('fund.otherEmpty'):t('fund.empty')}/></ScrollCard>
