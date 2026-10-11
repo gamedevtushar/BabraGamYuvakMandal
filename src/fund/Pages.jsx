@@ -6,7 +6,7 @@ import { Wallet, Users, Plus, Check, Minus, ChevronRight, ArrowDownCircle, Arrow
 import { useAuth } from '../context/AuthContext'
 import { useFund } from './Context'
 import { forms } from './Forms'
-import { t, tv, displayName } from '../i18n'
+import { t, tv, displayName, locale } from '../i18n'
 import { inr, inrShort, periodLabel, shiftPeriod, shortDate, monthName } from '../lib/format'
 import { localDate, monthOf, total, contributionSummary } from '../fundLedger'
 import SnapScroller from '../components/SnapScroller'
@@ -50,7 +50,7 @@ export function Accounts() {
   },[donations,expenses,current])
   const inMonth=donations.filter(r=>monthOf(r)===period),outMonth=expenses.filter(r=>monthOf(r)===period)
   const summary=contributionSummary(members,inMonth),{amounts}=summary
-  const people=summary.people.filter(m=>`${m.name} ${displayName(m)} ${m.occupation||''}`.toLowerCase().includes(search.toLowerCase())).sort((a,b)=>(a.name||'').localeCompare(b.name||''))
+  const people=summary.people.filter(m=>`${m.name} ${displayName(m)} ${m.occupation||''}`.toLowerCase().includes(search.toLowerCase())).sort((a,b)=>displayName(a).localeCompare(displayName(b),locale(),{sensitivity:'base'}))
   const balance=total(donations)-total(expenses)
   const rows=rowsFor(summary.otherIncome,outMonth).filter(r=>kind==='all'||r.kind===kind)
   return <LoadState>{slots?.right&&createPortal(<div className="rounded-lg bg-accent/12 px-2.5 py-1 text-right leading-none"><p className="text-[0.625rem] font-semibold text-muted">{t('r.balance')}</p><p className="mt-0.5 text-base font-bold whitespace-nowrap tabular-nums text-accent-ink">{loading||error?'—':inr(balance)}</p></div>,slots.right)}
@@ -76,7 +76,7 @@ export function Accounts() {
 }
 export function Members(){
  const {members,donations}=useFund(),{isAdmin}=useAuth();const [search,setSearch]=useState('')
- const filtered=members.filter(m=>`${m.name} ${displayName(m)} ${m.occupation||''}`.toLowerCase().includes(search.toLowerCase())).sort((a,b)=>(a.name||'').localeCompare(b.name||''))
+ const filtered=members.filter(m=>`${m.name} ${displayName(m)} ${m.occupation||''}`.toLowerCase().includes(search.toLowerCase())).sort((a,b)=>displayName(a).localeCompare(displayName(b),locale(),{sensitivity:'base'}))
  return <LoadState><PageHeader title={t('fund.members')} subtitle={t('fund.count',{n:members.length})} actions={isAdmin&&<Button icon={Plus} onClick={()=>forms.open('member')}>{t('fund.addMember')}</Button>}/><Input className="mb-4 shrink-0" aria-label={t('searchPh')} placeholder={t('searchPh')} value={search} onChange={e=>setSearch(e.target.value)}/><div className="no-scrollbar min-h-0 overflow-y-auto space-y-2">{!filtered.length?<EmptyState icon={Users} title={t('fund.noMembers')}/>:filtered.map(m=><Card key={m.id} className="flex items-center gap-3 p-3"><IconTile icon={Users}/><button className="min-w-0 flex-1 text-left cursor-pointer" onClick={()=>forms.open('memberHistory',{member:m})}><p className="font-semibold text-fg">{displayName(m)}</p><p className="text-xs text-muted">{[m.occupation,t(m.status==='inactive'?'fund.inactive':'fund.active')].filter(Boolean).join(' · ')}</p>{isAdmin&&m.phone&&<p className="text-xs text-muted">{m.phone}</p>}</button><div className="text-right"><p className="font-semibold text-ok">{inr(total(donations.filter(r=>r.memberId===m.id)))}</p>{isAdmin&&<Button size="sm" variant="ghost" onClick={()=>forms.open('member',{row:m})}>{t('edit')}</Button>}</div></Card>)}</div></LoadState>
 }
 export function Reports(){

@@ -7,7 +7,7 @@ import { useAuth, roleLabel } from '../context/AuthContext'
 import { useFund } from './Context'
 import { fundDb } from '../fundStore'
 import { localDate, monthOf, total } from '../fundLedger'
-import { t, tv, displayName, LangSwitch, useLang } from '../i18n'
+import { t, tv, displayName, locale, LangSwitch, useLang } from '../i18n'
 import { ThemeSwitch, TextSizeSwitch, PaletteGrid } from '../theme'
 import { useFeedback, setFeedback } from '../lib/feedback'
 import { useInstall, promptInstall } from '../pwa'
@@ -85,7 +85,7 @@ function Entry({kind='donations',row,memberId='',period,onClose}){
  const {close,markDirty}=useFormClose(onClose,busy)
  const income=kind==='donations'
  const submit=async e=>{e.preventDefault();setError('');if(!isAdmin){setError(t('fund.authNeeded'));return}if(!navigator.onLine){setError(t('fund.offline'));return}const n=Number(amount);if(!Number.isFinite(n)||n<=0||n>1e8||Math.abs(n*100-Math.round(n*100))>.00001){setError(t('fund.amountError'));return}if(!date){setError(t('required'));return}const who=members.find(m=>m.id===member);if(income&&!who){setError(t('fund.chooseMember'));return}if(!income&&!description.trim()){setError(t('required'));return}const payload=income?{amount:n,date,memberId:member,memberName:who.name,month:date.slice(0,7),paymentMode:mode}:{amount:n,date,description:description.trim(),paidTo:paidTo.trim()};setBusy(true);try{if(row)await updateDoc(doc(fundDb,kind,row.id),payload);else await addDoc(collection(fundDb,kind),{...payload,createdAt:serverTimestamp()});toast.success(t('saved'));onClose()}catch(err){setError(err.message)}finally{setBusy(false)}}
- const options=members.map(m=>({value:m.id,label:displayName(m),hint:displayName(m)!==m.name?m.name:undefined})).sort((a,b)=>a.label.localeCompare(b.label))
+ const options=members.map(m=>({value:m.id,label:displayName(m),hint:displayName(m)!==m.name?m.name:undefined})).sort((a,b)=>a.label.localeCompare(b.label,locale(),{sensitivity:'base'}))
  return <Modal title={t(income?(row?'fund.editIn':'fund.addIn'):(row?'fund.editOut':'fund.addOut'))} icon={income?ArrowDownCircle:ArrowUpCircle} iconTone={income?'green':'red'} onClose={close} footer={<Footer form="fund-entry" busy={busy} onClose={close}/>}><form id="fund-entry" onChange={markDirty} onSubmit={submit} className="space-y-4">
  {income?<Field label={t('fund.member')}><Select searchable options={options} value={member} onChange={value=>{markDirty();setMember(value)}} placeholder={t('fund.chooseMember')}/></Field>:<Field label={t('fund.description')}><Input aria-label={t('fund.description')} value={description} onChange={e=>setDescription(e.target.value)} maxLength={250} required autoFocus/></Field>}
  <Field label={t('amount')}><AmountInput value={amount} onChange={setAmount}/></Field><Field label={t('date')}><DateField value={date} onChange={value=>{markDirty();setDate(value)}}/></Field>

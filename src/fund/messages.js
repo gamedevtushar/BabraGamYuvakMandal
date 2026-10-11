@@ -1,5 +1,5 @@
 export const en = {
- appShortName:'Babra Gam', 'fund.monthlyAmount':'Monthly amount', 'fund.monthlyAmountHint':'Prefilled for new contributions. You can change an individual contribution. Existing records stay unchanged.', 'fund.preferencesLoad':'Could not load the monthly amount setting.',
+ 'fund.monthlyAmount':'Monthly amount', 'fund.monthlyAmountHint':'Prefilled for new contributions. You can change an individual contribution. Existing records stay unchanged.', 'fund.preferencesLoad':'Could not load the monthly amount setting.',
  'fund.nameGu':'Name in Gujarati', 'fund.discardTitle':'Discard changes?', 'fund.discardMessage':'Your unsaved changes will be lost.', 'fund.discard':'Discard',
  'fund.exitTitle':'Close app?', 'fund.exitQuestion':'Do you want to close the app?', 'fund.exit':'Close app', 'fund.closed':'App closed', 'fund.closeHint':'You can close this window or reopen the app.', 'fund.reopen':'Reopen app',
  edit:'Edit', 'login.showPassword':'Show password', 'login.hidePassword':'Hide password',
@@ -25,7 +25,7 @@ export const en = {
  offline:'You are offline. Reconnect before saving new changes.',
 }
 export const gu = {
- appShortName:'બાબરા ગામ', 'fund.monthlyAmount':'માસિક રકમ', 'fund.monthlyAmountHint':'નવો ફાળો ઉમેરતી વખતે આ રકમ આપમેળે આવશે. જરૂર હોય તો તે ફાળાની રકમ બદલી શકો છો. જૂની નોંધો બદલાશે નહીં.', 'fund.preferencesLoad':'માસિક રકમની સેટિંગ લોડ થઈ નથી.',
+ 'fund.monthlyAmount':'માસિક રકમ', 'fund.monthlyAmountHint':'નવો ફાળો ઉમેરતી વખતે આ રકમ આપમેળે આવશે. જરૂર હોય તો તે ફાળાની રકમ બદલી શકો છો. જૂની નોંધો બદલાશે નહીં.', 'fund.preferencesLoad':'માસિક રકમની સેટિંગ લોડ થઈ નથી.',
  'fund.nameGu':'ગુજરાતીમાં નામ', 'fund.discardTitle':'ફેરફારો રદ કરવા છે?', 'fund.discardMessage':'સાચવ્યા વગરના ફેરફારો ગુમાવશો.', 'fund.discard':'ફેરફારો છોડો',
  'fund.exitTitle':'એપ બંધ કરવી છે?', 'fund.exitQuestion':'શું તમે એપ બંધ કરવા માંગો છો?', 'fund.exit':'એપ બંધ કરો', 'fund.closed':'એપ બંધ થઈ ગઈ', 'fund.closeHint':'આ વિન્ડો બંધ કરો અથવા એપ ફરી ખોલો.', 'fund.reopen':'એપ ફરી ખોલો',
  edit:'ફેરફાર', 'login.showPassword':'પાસવર્ડ બતાવો', 'login.hidePassword':'પાસવર્ડ છુપાવો',
