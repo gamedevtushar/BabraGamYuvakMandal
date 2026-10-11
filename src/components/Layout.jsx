@@ -128,11 +128,11 @@ export default function Layout() {
         </header>
 
         {/* The only scroll area. Desktop pages use a fixed frame and scroll inside their cards. */}
-        <main className="no-scrollbar min-h-0 flex-1 overflow-y-auto">
+        <main className="no-scrollbar min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto">
           <div className="mx-auto flex min-h-full w-full max-w-7xl flex-col px-4 pb-6 pt-4 sm:px-6 lg:h-full lg:min-h-0 lg:px-8 lg:pb-6 lg:pt-6">
             <AnimatePresence mode="wait">
               <motion.div key={location.pathname} variants={pageVariants} initial="hidden" animate="show" exit="exit"
-                className="flex flex-1 flex-col lg:min-h-0">
+                className="flex min-w-0 flex-1 flex-col lg:min-h-0">
                 {outlet}
               </motion.div>
             </AnimatePresence>
