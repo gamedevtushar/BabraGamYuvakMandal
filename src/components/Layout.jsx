@@ -1,14 +1,14 @@
-import { useEffect } from 'react'
+
 import { NavLink, Link, useLocation, useOutlet, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
-import { Wallet, Palette, Building2, BarChart3, Users, LogOut, KeyRound, Plus, Menu as MenuIcon, LogIn, Eye, Download } from 'lucide-react'
+import { Wallet, Palette, BarChart3, Users, LogOut, KeyRound, Plus, Menu as MenuIcon, LogIn, Eye, Download } from 'lucide-react'
 import { useAuth, roleLabel } from '../context/AuthContext'
-import { useData } from '../context/DataContext'
+
 import { t, LangSwitch } from '../i18n'
 import { ThemeSwitch, TextSizeSwitch } from '../theme'
-import { pageVariants, confirmDialog, cx, Button, toast } from './ui'
-import { reminderState, enableReminders, refreshReminders } from '../lib/push'
-import { forms, startInstall } from './forms'
+import { pageVariants, confirmDialog, cx, Button } from './ui'
+
+import { forms, startInstall } from '../fund/Forms'
 import { useInstall } from '../pwa'
 import LogoMark from './Logo'
 
@@ -29,10 +29,10 @@ export function Avatar({ profile, className = 'size-9' }) {
 
 function Logo() {
   return (
-    <Link to="/" className="flex min-w-0 items-center gap-3">
+    <Link to="/" aria-label={t("appName")} className="flex min-w-0 items-center gap-3">
       <LogoMark className="size-10 shrink-0" />
       <div className="min-w-0 leading-tight">
-        <p className="truncate text-base font-bold text-fg">{t('appName')}</p>
+        <p className="text-base font-bold text-fg">BabraGam<br />YuvakMandal</p>
         <p className="truncate text-xs text-muted">{t('appSub')}</p>
       </div>
     </Link>
@@ -40,29 +40,14 @@ function Logo() {
 }
 
 export default function Layout() {
-  const { profile, isLoggedIn, isSuper, isAdmin, signOut } = useAuth()
-  const { wingName } = useData()
+  const { profile, isLoggedIn, isAdmin, signOut } = useAuth()
+
   const location = useLocation()
   const navigate = useNavigate()
   const outlet = useOutlet()
   const { canPrompt, installed } = useInstall()
-  const roleText = !isLoggedIn ? roleLabel('public')
-    : profile.role === 'wing_admin' ? `${roleLabel('wing_admin')} · ${wingName(profile.wingId)}` : roleLabel(profile.role)
-  // Wings & Units is only for admins
-  const nav = [...NAV, isAdmin && { to: '/units', key: 'units', icon: Building2 }, isSuper && { to: '/users', key: 'users', icon: Users }].filter(Boolean)
-
-  // Installed app: keep the reminder subscription fresh, and offer reminders once
-  useEffect(() => {
-    refreshReminders()
-    let asked = true
-    try { asked = !!localStorage.getItem('remAsked') } catch { /* storage unavailable */ }
-    if (asked || reminderState() !== 'default') return
-    const id = setTimeout(() => {
-      try { localStorage.setItem('remAsked', '1') } catch { /* storage unavailable */ }
-      toast.info(t('rem.ask'), { title: t('rem.title'), duration: 20000, action: { label: t('rem.turnOn'), onClick: () => enableReminders().then((ok) => ok && toast.success(t('rem.on'))) } })
-    }, 2500)
-    return () => clearTimeout(id)
-  }, [])
+  const roleText = roleLabel(isLoggedIn ? 'admin' : 'public')
+  const nav = [...NAV, { to: '/members', key: 'units', icon: Users }]
 
   const logout = async () => {
     if (await confirmDialog({ title: t('signOut'), message: t('confirm.signOut'), confirmText: t('signOut'), tone: 'primary' })) signOut()

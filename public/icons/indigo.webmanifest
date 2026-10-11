@@ -1,8 +1,8 @@
 {
   "id": "../",
-  "name": "Astha Residency – Maintenance",
-  "short_name": "Astha",
-  "description": "Building maintenance, bills and reports for Astha Residency",
+  "name": "BabraGamYuvakMandal",
+  "short_name": "BGYM",
+  "description": "Family charity fund contributions, expenses and reports",
   "start_url": "../",
   "scope": "../",
   "display": "standalone",

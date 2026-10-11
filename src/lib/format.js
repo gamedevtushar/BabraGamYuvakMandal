@@ -1,6 +1,6 @@
 import { locale } from '../i18n'
 
-const inrFormatter = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', maximumFractionDigits: 0 })
+const inrFormatter = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 0, maximumFractionDigits: 2 })
 
 export const inr = (n) => inrFormatter.format(Number(n) || 0)
 

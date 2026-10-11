@@ -1,9 +1,6 @@
 import { useId } from 'react'
 
-/**
- * Astha Residency mark: a capital "A" drawn as a building roof, with a warm lit window inside.
- * A = Astha, roof = residency, the light = home and faith (astha). Same artwork as public/favicon.svg; colours follow the chosen theme.
- */
+/** BabraGamYuvakMandal mark, using the original theme colours. */
 export default function LogoMark({ className = 'size-10', title }) {
   const id = useId()
   return (
@@ -15,12 +12,7 @@ export default function LogoMark({ className = 'size-10', title }) {
         </linearGradient>
       </defs>
       <rect width="64" height="64" rx="15" fill={`url(#${id}-bg)`} />
-      {/* Roof / letter A */}
-      <path d="M13 51 L32 13 L51 51" fill="none" stroke="#fff" strokeWidth="6.5" strokeLinecap="round" strokeLinejoin="round" />
-      {/* Floor / crossbar */}
-      <path d="M18.75 40.5 H45.25" stroke="#fff" strokeWidth="5" strokeLinecap="round" />
-      {/* Lit window */}
-      <circle cx="32" cy="30.5" r="3.4" style={{ fill: 'var(--logo-dot)' }} />
+      <path d="M21 50V14H37L45 21V26L37 32H21M37 32L46 38V43L38 50H21" fill="none" stroke="#fff" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   )
 }

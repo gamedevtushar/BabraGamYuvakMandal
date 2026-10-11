@@ -24,8 +24,7 @@ function render(pal, size, rx, k = 1) {
     // k < 1 shrinks the artwork toward the centre (maskable icons need a safe margin)
     const u = 32 + (u0 - 32) / k, v = 32 + (v0 - 32) / k
     if (rx > 0 && roundRect(u0, v0, rx) > 0) return null
-    if (Math.hypot(u - 32, v - 30.5) <= 3.4) return DOT
-    if (seg(u, v, 13, 51, 32, 13) <= 3.25 || seg(u, v, 32, 13, 51, 51) <= 3.25 || seg(u, v, 18.75, 40.5, 45.25, 40.5) <= 2.5) return WHITE
+    if ([[21,14,21,50],[21,14,37,14],[37,14,45,21],[45,21,45,26],[45,26,37,32],[21,32,37,32],[37,32,46,38],[46,38,46,43],[46,43,38,50],[38,50,21,50]].some(([a,b,c,d]) => seg(u,v,a,b,c,d) <= 2.5)) return WHITE
     const t = Math.max(0, Math.min(1, (u0 + v0) / 128))
     return C1.map((c, i) => c + (C2[i] - c) * t)
   }
@@ -71,9 +70,9 @@ for (const pal of PALETTES) {
   for (const [name, size, rx, k] of files) fs.writeFileSync(`public/icons/${name}`, render(pal, size, rx, k))
   fs.writeFileSync(`public/icons/${pal.id}.webmanifest`, JSON.stringify({
     id: '../',
-    name: 'Astha Residency – Maintenance',
-    short_name: 'Astha',
-    description: 'Building maintenance, bills and reports for Astha Residency',
+    name: 'BabraGamYuvakMandal',
+    short_name: 'BGYM',
+    description: 'Family charity fund contributions, expenses and reports',
     start_url: '../',
     scope: '../',
     display: 'standalone',

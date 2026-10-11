@@ -1,6 +1,6 @@
 # BabraGamYuvakMandal
 
-Family charity fund: money in, money out, members and monthly reports. Mobile layout, search, CSV exports, and password-gated editing.
+Family charity fund: money in, money out, members and monthly reports. Uses the original Astha interface: colour themes, Gujarati/English, text sizing, compact account cards, member contribution tiles, month scrollers, mobile bottom menu and quick add. Includes search, CSV exports and password-gated editing.
 
 ## Run
 
@@ -26,7 +26,7 @@ This is a convenience lock, not Firebase Authentication or database authorizatio
 
 Repository: https://github.com/gamedevtushar/BabraGamYuvakMandal
 Enable Settings → Pages → Source: GitHub Actions. Push to main to build and deploy.
-Expected URL: https://gamedevtushar.github.io/BabraGamYuvakMandal/
+Live URL: https://gamedevtushar.github.io/BabraGamYuvakMandal/
 The Firebase public web configuration is included; no FIREBASE_CONFIG secret is needed.
-The old society UI remains as unused reference files. The active entry is `src/main.jsx` → `src/FundApp.jsx`.
+The active app reuses Astha’s `Layout`, `ui`, `theme`, `i18n`, `Backdrop` and `SnapScroller`. Fund-specific screens and forms are in `src/fund/`. Hash routes support GitHub Pages navigation and refresh.
 Society reminders and rules deployment have been disabled in this copy.

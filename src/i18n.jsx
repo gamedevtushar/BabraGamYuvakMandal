@@ -1,3 +1,4 @@
+import { en as fundEn, gu as fundGu } from './fund/messages'
 import { createContext, useContext, useState } from 'react'
 import { motion } from 'motion/react'
 
@@ -283,6 +284,8 @@ const gu = {
   'v.Cash': 'રોકડ', 'v.UPI': 'UPI', 'v.Bank Transfer': 'બેંક ટ્રાન્સફર', 'v.Cheque': 'ચેક',
 }
 
+Object.assign(en, fundEn)
+Object.assign(gu, fundGu)
 const DICTS = { en, gu }
 
 const readLang = () => {

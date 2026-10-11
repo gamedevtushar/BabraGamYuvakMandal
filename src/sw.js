@@ -2,8 +2,8 @@
 // Service worker: makes the app installable, fast and always up to date.
 // __BUILD_ID__ is replaced on every build, so each deploy gets a fresh cache and old ones are deleted.
 const VERSION = '__BUILD_ID__'
-const CACHE = `astha-${VERSION}`
-const BASE = new URL(self.registration.scope).pathname // e.g. /AsthaResidency/
+const CACHE = `bgym-${VERSION}`
+const BASE = new URL(self.registration.scope).pathname // e.g. /BabraGamYuvakMandal/
 // Default (saffron) theme files; other themes' icons are cached the first time they are used
 const SHELL = [BASE, `${BASE}icons/saffron.webmanifest`, `${BASE}favicon.svg?v=3`, `${BASE}icons/saffron-192.png`]
 
@@ -13,13 +13,13 @@ self.addEventListener('install', (event) => {
 
 self.addEventListener('activate', (event) => {
   event.waitUntil((async () => {
-    for (const key of await caches.keys()) if (key !== CACHE) await caches.delete(key)
+    for (const key of await caches.keys()) if (key.startsWith('bgym-') && key !== CACHE && key !== 'bgym-prefs') await caches.delete(key)
     await self.clients.claim()
   })())
 })
 
 // The page asks us to take over after the user taps "Update", and tells us the colour theme (for the notification icon)
-const PREFS = 'astha-prefs'
+const PREFS = 'bgym-prefs'
 self.addEventListener('message', (event) => {
   if (event.data === 'SKIP_WAITING') self.skipWaiting()
   if (event.data?.type === 'palette') caches.open(PREFS).then((c) => c.put('palette', new Response(event.data.id)))
@@ -31,7 +31,7 @@ self.addEventListener('push', (event) => {
     let d = {}
     try { d = event.data?.json() || {} } catch { d = { body: event.data?.text() || '' } }
     const palette = await (await caches.open(PREFS)).match('palette').then((r) => r?.text()).catch(() => null)
-    await self.registration.showNotification(d.title || 'આસ્થા રેસિડેન્સી', {
+    await self.registration.showNotification(d.title || 'BabraGamYuvakMandal', {
       body: d.body || '', icon: `${BASE}icons/${palette || 'saffron'}-192.png`, badge: `${BASE}icons/${palette || 'saffron'}-192.png`,
       tag: 'maintenance-reminder', renotify: true, data: { link: d.link || BASE },
     })
