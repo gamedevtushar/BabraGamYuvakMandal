@@ -1,4 +1,5 @@
 export const en = {
+ 'fund.imageSaved':'Report image saved', 'fund.shareImage':'Share', 'fund.shareFailed':'Could not open sharing. You can share the saved image from your downloads.',
  'fund.saveImage':'Save HD report image', 'fund.imageFailed':'Could not save the report image. Please try again.',
  'fund.monthlyAmount':'Monthly amount', 'fund.monthlyAmountHint':'Prefilled for new contributions. You can change an individual contribution. Existing records stay unchanged.', 'fund.preferencesLoad':'Could not load the monthly amount setting.',
  'fund.nameGu':'Name in Gujarati', 'fund.discardTitle':'Discard changes?', 'fund.discardMessage':'Your unsaved changes will be lost.', 'fund.discard':'Discard',
@@ -26,6 +27,7 @@ export const en = {
  offline:'You are offline. Reconnect before saving new changes.',
 }
 export const gu = {
+ 'fund.imageSaved':'રિપોર્ટની છબી સાચવી', 'fund.shareImage':'શેર કરો', 'fund.shareFailed':'શેરિંગ ખૂલી શક્યું નથી. ડાઉનલોડ કરેલી છબી શેર કરી શકો છો.',
  'fund.saveImage':'રિપોર્ટની HD છબી સાચવો', 'fund.imageFailed':'રિપોર્ટની છબી સાચવી શકાઈ નથી. ફરી પ્રયત્ન કરો.',
  'fund.monthlyAmount':'માસિક રકમ', 'fund.monthlyAmountHint':'નવો ફાળો ઉમેરતી વખતે આ રકમ આપમેળે આવશે. જરૂર હોય તો તે ફાળાની રકમ બદલી શકો છો. જૂની નોંધો બદલાશે નહીં.', 'fund.preferencesLoad':'માસિક રકમની સેટિંગ લોડ થઈ નથી.',
  'fund.nameGu':'ગુજરાતીમાં નામ', 'fund.discardTitle':'ફેરફારો રદ કરવા છે?', 'fund.discardMessage':'સાચવ્યા વગરના ફેરફારો ગુમાવશો.', 'fund.discard':'ફેરફારો છોડો',

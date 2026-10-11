@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { motion } from 'motion/react'
-import { Wallet, Users, Plus, ChevronRight, ArrowDownCircle, ArrowUpCircle, Download } from 'lucide-react'
+import { Wallet, Users, Plus, ChevronRight, ArrowDownCircle, ArrowUpCircle } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useFund } from './Context'
 import { forms } from './Forms'
@@ -10,8 +10,10 @@ import { t, tv, displayName, locale } from '../i18n'
 import { inr, inrShort, periodLabel, shiftPeriod, shortDate, monthName } from '../lib/format'
 import { localDate, monthOf, total, contributionSummary } from '../fundLedger'
 import SnapScroller from '../components/SnapScroller'
-import { Button, Card, ScrollCard, IconButton, IconTile, Input, EmptyState, Spinner, PageHeader, cx, toast } from '../components/ui'
-import { saveReportImage } from './reportImage'
+import { Button, Card, ScrollCard, IconTile, Input, EmptyState, Spinner, PageHeader, cx } from '../components/ui'
+import ReportDownload from './ReportDownload'
+
+const reportLabels=()=>({name:t('appName'),report:t('nav.reports'),opening:t('fund.opening'),closing:t('fund.closing'),total:t('r.total'),failed:t('fund.imageFailed')})
 
 function LoadState({ children }) {
   const { loading, error } = useFund()
@@ -49,6 +51,12 @@ export function Accounts() {
   const MemberCard=isAdmin?motion.button:motion.div
   const balance=total(donations)-total(expenses)
   const rows=rowsFor(summary.otherIncome,outMonth).filter(r=>kind==='all'||r.kind===kind)
+  const income=total(inMonth),expense=total(outMonth)
+  const opening=total(donations.filter(r=>monthOf(r)<period))-total(expenses.filter(r=>monthOf(r)<period))
+  const report={period,periodTitle:periodLabel(period),opening,income,expense,balance:Math.round((opening+income-expense)*100)/100,contributed:summary.contributed,notContributed:summary.notContributed,
+    people:people.map(m=>({name:displayName(m),amount:(amounts.get(m.id)||0)/100,paid:amounts.has(m.id)})),
+    entries:rowsFor(summary.otherIncome,outMonth).map(r=>({title:r.kind==='donations'?displayName(r.memberName||r.title):r.title,dateLabel:shortDate(r.date),amount:r.amount,incoming:r.kind==='donations'})),
+    labels:{...reportLabels(),members:t('fund.members'),amount:t('amount'),received:t('fund.received'),notContributed:t('fund.notContributed'),income:t('income'),expense:t('expense'),otherEntries:t('fund.otherEntries'),empty:t('fund.otherEmpty'),noMembers:t('fund.noMembers')}}
   return <LoadState>{slots?.right&&createPortal(<div className="rounded-lg bg-accent/12 px-2.5 py-1 text-right leading-none"><p className="text-[0.625rem] font-semibold text-muted">{t('r.balance')}</p><p className="mt-0.5 text-base font-bold whitespace-nowrap tabular-nums text-accent-ink">{loading||error?'—':inr(balance)}</p></div>,slots.right)}
     <div className="sticky top-0 z-20 -mx-4 -mt-4 mb-3 shrink-0 space-y-2 bg-bg/95 px-4 pb-2 pt-2 backdrop-blur-md sm:-mx-6 sm:px-6 lg:static lg:mx-0 lg:mt-0 lg:bg-transparent lg:px-0 lg:pt-0 lg:backdrop-blur-none">
       <div className="clay-button hidden items-center gap-3 rounded-2xl bg-accent px-4 py-3 text-white lg:flex"><Wallet className="size-5"/><p className="flex-1 text-xs font-semibold">{t('appName')} · {t('fund.allTime')}</p><p className="text-xl font-bold">{inr(balance)}</p></div>
@@ -66,7 +74,7 @@ export function Accounts() {
       </ScrollCard>
       <ScrollCard className="lg:col-span-2" header={<div className="space-y-2 px-3 pt-3"><div className="flex items-center gap-2"><h2 className="flex-1 text-sm font-semibold text-muted">{t('fund.otherEntries')}</h2>{isAdmin&&<Button size="sm" icon={Plus} onClick={()=>forms.open('entry',{kind:'expenses',period})}>{t('add')}</Button>}</div><div className="flex gap-1">{[['all','all'],['donations','fund.otherIncome'],['expenses','expense']].map(([v,k])=><button key={v} onClick={()=>setKind(v)} aria-pressed={kind===v} className={cx('flex-1 rounded-lg px-2 py-1 text-xs cursor-pointer',kind===v?'bg-accent/12 text-accent-ink font-semibold':'text-muted')}>{t(k)}</button>)}</div></div>}><EntryList rows={rows} emptyTitle={kind==='all'?t('fund.otherEmpty'):t('fund.empty')}/></ScrollCard>
     </div>
-    <div className="clay-bar sticky bottom-0 z-20 -mx-4 -mb-6 mt-auto flex shrink-0 items-center gap-1 bg-bar px-2 py-2 sm:-mx-6 sm:px-4 lg:static lg:mx-0 lg:mb-0 lg:mt-4 lg:rounded-2xl lg:px-2"><SnapScroller items={months} value={period} onChange={setPeriod} className="min-w-0 flex-1" itemWidth="7.5rem"/></div>
+    <div className="clay-bar sticky bottom-0 z-20 -mx-4 -mb-6 mt-auto flex shrink-0 items-center gap-1 bg-bar px-2 py-2 sm:-mx-6 sm:px-4 lg:static lg:mx-0 lg:mb-0 lg:mt-4 lg:rounded-2xl lg:px-2"><SnapScroller items={months} value={period} onChange={setPeriod} className="min-w-0 flex-1" itemWidth="7.5rem"/><ReportDownload report={report} disabled={loading||!!error}/></div>
   </LoadState>
 }
 export function Members(){
@@ -76,18 +84,15 @@ export function Members(){
  return <LoadState><PageHeader title={t('fund.members')} subtitle={t('fund.count',{n:members.length})} actions={isAdmin&&<Button icon={Plus} onClick={()=>forms.open('member')}>{t('fund.addMember')}</Button>}/><Input className="mb-2 shrink-0" aria-label={t('searchPh')} placeholder={t('searchPh')} value={search} onChange={e=>setSearch(e.target.value)}/><div className="no-scrollbar min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto space-y-3 p-3">{!filtered.length?<EmptyState icon={Users} title={t('fund.noMembers')}/>:filtered.map(m=><Card key={m.id} className="grid min-w-0 grid-cols-[auto_minmax(0,1fr)_auto] items-center gap-2.5 p-3"><IconTile icon={Users}/><NameTag type={isAdmin?'button':undefined} className={cx('min-w-0 text-left',isAdmin&&'cursor-pointer')} onClick={isAdmin?()=>forms.open('memberHistory',{member:m}):undefined}><p className="font-semibold break-words text-fg">{displayName(m)}</p><p className="text-xs break-words text-muted">{[m.occupation,t(m.status==='inactive'?'fund.inactive':'fund.active')].filter(Boolean).join(' · ')}</p>{isAdmin&&m.phone&&<p className="text-xs break-all text-muted">{m.phone}</p>}</NameTag><div className="shrink-0 text-right"><p className="text-sm font-semibold whitespace-nowrap tabular-nums text-ok">{inr(total(donations.filter(r=>r.memberId===m.id)))}</p>{isAdmin&&<Button size="sm" variant="ghost" onClick={()=>forms.open('member',{row:m})}>{t('edit')}</Button>}</div></Card>)}</div></LoadState>
 }
 export function Reports(){
- const {donations,expenses}=useFund(); const current=localDate().slice(0,4);const [year,setYear]=useState(current),[saving,setSaving]=useState(false)
+ const {donations,expenses,loading,error}=useFund(); const current=localDate().slice(0,4);const [year,setYear]=useState(current)
  const all=rowsFor(donations,expenses),years=[...new Set([current,...all.map(r=>r.date?.slice(0,4)).filter(Boolean)])].sort()
  const opening=total(donations.filter(r=>monthOf(r)<`${year}-01`))-total(expenses.filter(r=>monthOf(r)<`${year}-01`))
  let balance=opening
  const months=Array.from({length:12},(_,i)=>`${year}-${String(i+1).padStart(2,'0')}`).map(month=>{const income=total(donations.filter(r=>monthOf(r)===month)),out=total(expenses.filter(r=>monthOf(r)===month));balance=Math.round((balance+income-out)*100)/100;return {month,income,out,balance}})
  const entries=all.filter(r=>r.date?.startsWith(year))
  const income=total(entries.filter(r=>r.kind==='donations')),expense=total(entries.filter(r=>r.kind==='expenses'))
- const download=async()=>{
-   setSaving(true)
-   try{await saveReportImage({year,opening,months:months.map(row=>({...row,label:monthName(row.month)})),income,expense,balance,formatAmount:inr,labels:{name:t('appName'),report:t('nav.reports'),opening:t('fund.opening'),closing:t('fund.closing'),total:t('r.total'),columns:['r.month','r.in','r.out','r.balance'].map(key=>t(key)),failed:t('fund.imageFailed')}})}catch(error){toast.error(error)}finally{setSaving(false)}
- }
- return <LoadState><Card className="mb-3 min-h-0 min-w-0 flex-1 overflow-hidden lg:overflow-auto"><div className="flex justify-between border-b border-fg/10 px-4 py-3 text-sm"><span className="text-muted">{t('fund.opening')}</span><strong className="text-fg">{inr(opening)}</strong></div><table className="w-full text-sm tabular-nums"><thead><tr className="bg-fg/[0.03] text-muted">{['r.month','r.in','r.out','r.balance'].map(k=><th key={k} className="px-2 py-3 text-right first:text-left">{t(k)}</th>)}</tr></thead><tbody>{months.map(r=><tr key={r.month} className="border-t border-fg/[0.06]"><td className="px-2 py-3 text-fg">{monthName(r.month)}</td><td className="px-2 py-3 text-right text-ok">{inr(r.income)}</td><td className="px-2 py-3 text-right text-bad">{inr(r.out)}</td><td className="px-2 py-3 text-right font-semibold text-fg">{inr(r.balance)}</td></tr>)}</tbody><tfoot><tr className="border-t border-fg/15 bg-accent/10 font-bold"><td className="px-2 py-3 text-fg">{t('r.total')}</td><td className="px-2 py-3 text-right text-ok">{inr(income)}</td><td className="px-2 py-3 text-right text-bad">{inr(expense)}</td><td className="px-2 py-3 text-right text-fg">{inr(balance)}</td></tr></tfoot></table></Card><div className="clay-bar sticky bottom-0 z-20 -mx-4 -mb-6 mt-auto flex shrink-0 items-center gap-1 bg-bar px-2 py-2 sm:-mx-6 sm:px-4 lg:static lg:mx-0 lg:mb-0 lg:mt-4 lg:rounded-2xl lg:px-2"><SnapScroller items={years.map(y=>({value:y,label:y}))} value={year} onChange={setYear} className="min-w-0 flex-1" itemWidth="7.5rem"/><IconButton icon={Download} label={t('fund.saveImage')} variant="secondary" className="size-10" loading={saving} onClick={download}/></div></LoadState>
+ const report={year,opening,months:months.map(row=>({...row,label:monthName(row.month)})),income,expense,balance,labels:{...reportLabels(),columns:['r.month','r.in','r.out','r.balance'].map(key=>t(key))}}
+ return <LoadState><Card className="mb-3 min-h-0 min-w-0 flex-1 overflow-hidden lg:overflow-auto"><div className="flex justify-between border-b border-fg/10 px-4 py-3 text-sm"><span className="text-muted">{t('fund.opening')}</span><strong className="text-fg">{inr(opening)}</strong></div><table className="w-full text-sm tabular-nums"><thead><tr className="bg-fg/[0.03] text-muted">{['r.month','r.in','r.out','r.balance'].map(k=><th key={k} className="px-2 py-3 text-right first:text-left">{t(k)}</th>)}</tr></thead><tbody>{months.map(r=><tr key={r.month} className="border-t border-fg/[0.06]"><td className="px-2 py-3 text-fg">{monthName(r.month)}</td><td className="px-2 py-3 text-right text-ok">{inr(r.income)}</td><td className="px-2 py-3 text-right text-bad">{inr(r.out)}</td><td className="px-2 py-3 text-right font-semibold text-fg">{inr(r.balance)}</td></tr>)}</tbody><tfoot><tr className="border-t border-fg/15 bg-accent/10 font-bold"><td className="px-2 py-3 text-fg">{t('r.total')}</td><td className="px-2 py-3 text-right text-ok">{inr(income)}</td><td className="px-2 py-3 text-right text-bad">{inr(expense)}</td><td className="px-2 py-3 text-right text-fg">{inr(balance)}</td></tr></tfoot></table></Card><div className="clay-bar sticky bottom-0 z-20 -mx-4 -mb-6 mt-auto flex shrink-0 items-center gap-1 bg-bar px-2 py-2 sm:-mx-6 sm:px-4 lg:static lg:mx-0 lg:mb-0 lg:mt-4 lg:rounded-2xl lg:px-2"><SnapScroller items={years.map(y=>({value:y,label:y}))} value={year} onChange={setYear} className="min-w-0 flex-1" itemWidth="7.5rem"/><ReportDownload report={report} disabled={loading||!!error}/></div></LoadState>
 }
 
 
