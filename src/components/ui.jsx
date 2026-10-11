@@ -5,6 +5,7 @@ import { X, Loader2, Inbox, CheckCircle2, AlertCircle, Info, AlertTriangle, Wifi
 import { t } from '../i18n'
 import { inr, today, daysAgo } from '../lib/format'
 import { useBackDismiss } from '../lib/appBack'
+import ClayIcon from './ClayIcon'
 
 export const cx = (...c) => c.filter(Boolean).join(' ')
 
@@ -127,8 +128,8 @@ const TILE = {
 }
 export function IconTile({ icon: Icon, tone = 'indigo', className = 'size-10', iconClass = 'size-5' }) {
   return (
-    <div className={cx('clay-tile flex shrink-0 items-center justify-center rounded-2xl', TILE[tone], className)}>
-      <Icon className={iconClass} />
+    <div className={cx('clay-icon-holder flex shrink-0 items-center justify-center rounded-2xl', TILE[tone], className)}>
+      <ClayIcon icon={Icon} className="size-full" />
     </div>
   )
 }
@@ -462,8 +463,8 @@ export function ScrollCard({ className, bodyClass, children, header }) {
 export function EmptyState({ icon: Icon = Inbox, title, text, action }) {
   return (
     <div className="flex flex-col items-center justify-center px-6 py-12 text-center">
-      <div className="mb-4 rounded-2xl bg-accent/10 p-4 text-accent-ink">
-        <Icon className="size-7" />
+      <div className="mb-4 text-accent-ink">
+        <ClayIcon icon={Icon} className="size-14" />
       </div>
       <p className="font-semibold text-fg">{title}</p>
       {text && <p className="mt-1.5 max-w-sm text-sm text-muted">{text}</p>}

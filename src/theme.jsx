@@ -20,8 +20,8 @@ export const getPalette = () => {
 }
 const clayPalette = {
   ...paletteById(DEFAULT_PALETTE),
-  light: { bg:'#eee8e1', surface:'#f8f3ed', bar:'#f3ede6', fg:'#302b28', muted:'#68605b', subtle:'#817670', accent:'#b84e2d', ink:'#923b22' },
-  dark: { bg:'#22212a', surface:'#33313d', bar:'#2d2b36', fg:'#f7f1eb', muted:'#c2b9b4', subtle:'#a99e9a', accent:'#b84e2d', ink:'#ffc1a4' },
+  light: { bg:'#f4e7e8', surface:'#fff4ed', bar:'#f7e9ef', fg:'#39354c', muted:'#6c6174', subtle:'#82758b', accent:'#7464b1', ink:'#514180' },
+  dark: { bg:'#272333', surface:'#3e374e', bar:'#342d43', fg:'#faf2ef', muted:'#d0c2d4', subtle:'#b4a5bf', accent:'#7766b6', ink:'#d3c6ff' },
 }
 
 export function applyTheme() {
@@ -40,7 +40,7 @@ export function applyTheme() {
   // The notification icon follows the theme too
   navigator.serviceWorker?.controller?.postMessage({ type: 'palette', id: pal.id })
   // Saved for the next start, so the right colours show before the app loads
-  try { localStorage.setItem('themeVars', JSON.stringify({ version:'clay-1', light: paletteVars(pal, 'light'), dark: paletteVars(pal, 'dark'), bar: { light: pal.light.bar, dark: pal.dark.bar } })) } catch { /* storage unavailable */ }
+  try { localStorage.setItem('themeVars', JSON.stringify({ version:'clay-2', light: paletteVars(pal, 'light'), dark: paletteVars(pal, 'dark'), bar: { light: pal.light.bar, dark: pal.dark.bar } })) } catch { /* storage unavailable */ }
 }
 
 export function setPalette(id) {

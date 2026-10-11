@@ -11,6 +11,7 @@ import { pageVariants, confirmDialog, cx, Button } from './ui'
 import { forms, startInstall } from '../fund/Forms'
 import { useInstall } from '../pwa'
 import LogoMark from './Logo'
+import ClayIcon from './ClayIcon'
 import { useFund } from '../fund/Context'
 import { inr } from '../lib/format'
 
@@ -75,7 +76,7 @@ export default function Layout() {
               className={({ isActive }) => cx('relative flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-base font-medium transition-colors', isActive ? 'text-accent-ink' : 'text-muted hover:bg-fg/[0.05] hover:text-fg')}>
               {({ isActive }) => <>
                 {isActive && <motion.span layoutId="side-active" transition={spring} className="clay-selected absolute inset-0 rounded-xl bg-accent/10" />}
-                <Icon className="relative size-[1.125rem]" /><span className="relative">{t(`nav.${key}`)}</span>
+                <ClayIcon icon={Icon} className="relative size-8" /><span className="relative">{t(`nav.${key}`)}</span>
               </>}
             </NavLink>
           ))}
@@ -146,13 +147,13 @@ export default function Layout() {
                 <div key="fab" className="flex justify-center">
                   <motion.button type="button" aria-label={t('quickAdd')} whileTap={{ scale: 0.9 }} onClick={() => forms.open('quickAdd')}
                     className="clay-button flex size-12 items-center justify-center rounded-2xl bg-accent text-white cursor-pointer">
-                    <Plus className="size-6" />
+                    <ClayIcon icon={Plus} className="size-9" />
                   </motion.button>
                 </div>
               )
               if (item.more) return (
                 <button key="more" type="button" onClick={() => forms.open('more')} className="flex flex-col items-center gap-1 rounded-xl py-2 text-[0.8125rem] font-medium text-muted cursor-pointer">
-                  <MenuIcon className="size-[1.375rem]" /><span>{t('more')}</span>
+                  <ClayIcon icon={MenuIcon} className="size-8" /><span>{t('more')}</span>
                 </button>
               )
               const { to, key, icon: Icon, end } = item
@@ -160,7 +161,7 @@ export default function Layout() {
                 <NavLink key={to} to={to} end={end} className="relative flex flex-col items-center gap-1 rounded-xl py-2 text-[0.8125rem] font-medium">
                   {({ isActive }) => <>
                     {isActive && <motion.span layoutId="bottom-active" transition={spring} className="clay-selected absolute inset-0 rounded-2xl bg-bar-pill" />}
-                    <Icon className={cx('relative size-[1.375rem]', isActive ? 'text-accent-ink' : 'text-muted')} />
+                    <ClayIcon icon={Icon} className="relative size-8" />
                     <span className={cx('relative max-w-full truncate px-0.5', isActive ? 'font-semibold text-accent-ink' : 'text-muted')}>{t(`nav.${key}Short`)}</span>
                   </>}
                 </NavLink>

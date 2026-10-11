@@ -46,56 +46,62 @@
 
 :root {
   color-scheme: light;
-  --c-bg: #eee8e1;
-  --c-fg: #302b28;
-  --c-muted: #68605b;
-  --c-subtle: #817670;
-  --c-surface: #f8f3ed;
-  --c-accent: #b84e2d;
-  --c-accent-ink: #923b22;
-  --c-ok: #23664a;
+  --c-bg: #f4e7e8;
+  --c-fg: #39354c;
+  --c-muted: #6c6174;
+  --c-subtle: #82758b;
+  --c-surface: #fff4ed;
+  --c-accent: #7464b1;
+  --c-accent-ink: #514180;
+  --c-ok: #266356;
   --c-bad: #be123c;
   --c-warn: #a16207;
   --c-info: #0369a1;
-  --c-bar: #f3ede6;
+  --c-bar: #f7e9ef;
   --c-bar-line: color-mix(in oklab, var(--c-accent) 16%, transparent);
-  --c-bar-pill: #f8ded0;
+  --c-bar-pill: #e6d9f4;
   --logo-1: #f97316;
   --logo-2: #c2410c;
   --logo-dot: #fef3c7;
-  --clay-light: rgb(255 255 255 / .85);
-  --clay-shade: rgb(128 99 77 / .16);
-  --clay-edge: rgb(255 255 255 / .55);
-  --clay-inner: rgb(137 104 79 / .10);
-  --clay-shadow: 7px 9px 18px -7px var(--clay-shade), -4px -4px 12px -5px var(--clay-light), inset 2px 2px 4px var(--clay-light), inset -3px -3px 6px var(--clay-inner);
-  --clay-small: 3px 5px 9px -4px var(--clay-shade), inset 1px 1px 3px var(--clay-light), inset -2px -2px 4px var(--clay-inner);
-  --clay-pressed: inset 2px 3px 6px var(--clay-shade), inset -2px -2px 5px var(--clay-light);
-  --clay-paid: #d6ebdc;
-  --clay-paid-shade: rgb(41 100 64 / .15);
+  --clay-light: rgb(255 255 255 / .92);
+  --clay-shade: rgb(96 65 91 / .28);
+  --clay-edge: rgb(255 255 255 / .20);
+  --clay-inner: rgb(126 98 126 / .23);
+  --clay-shadow: 8px 14px 22px -8px var(--clay-shade), 2px 5px 7px -3px var(--clay-shade), inset 4px 5px 8px var(--clay-light), inset -5px -7px 11px var(--clay-inner);
+  --clay-small: 4px 7px 10px -3px var(--clay-shade), inset 2px 3px 5px var(--clay-light), inset -3px -4px 7px var(--clay-inner);
+  --clay-pressed: inset 3px 4px 7px var(--clay-shade), inset -2px -3px 5px var(--clay-light);
+  --clay-paid: #bde2d2;
+  --clay-paid-shade: rgb(58 109 96 / .26);
+  --clay-neutral: #e9def2;
+  --clay-top: rgb(255 255 255 / .38);
+  --clay-bottom: rgb(88 63 106 / .07);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --c-bg: #22212a;
-  --c-fg: #f7f1eb;
-  --c-muted: #c2b9b4;
-  --c-subtle: #a99e9a;
-  --c-surface: #33313d;
-  --c-accent: #b84e2d;
-  --c-accent-ink: #ffc1a4;
-  --c-ok: #9cdeb2;
+  --c-bg: #272333;
+  --c-fg: #faf2ef;
+  --c-muted: #d0c2d4;
+  --c-subtle: #b4a5bf;
+  --c-surface: #3e374e;
+  --c-accent: #7766b6;
+  --c-accent-ink: #d3c6ff;
+  --c-ok: #c0efda;
   --c-bad: #fb7185;
   --c-warn: #facc15;
   --c-info: #38bdf8;
-  --c-bar: #2d2b36;
+  --c-bar: #342d43;
   --c-bar-line: color-mix(in oklab, var(--c-accent) 20%, transparent);
   --c-bar-pill: color-mix(in oklab, var(--c-accent) 22%, transparent);
-  --clay-light: rgb(255 255 255 / .09);
-  --clay-shade: rgb(0 0 0 / .45);
-  --clay-edge: rgb(255 255 255 / .065);
-  --clay-inner: rgb(0 0 0 / .20);
-  --clay-paid: #2e4b3d;
-  --clay-paid-shade: rgb(0 0 0 / .30);
+  --clay-light: rgb(222 207 255 / .16);
+  --clay-shade: rgb(8 4 18 / .65);
+  --clay-edge: rgb(255 255 255 / .04);
+  --clay-inner: rgb(10 6 22 / .35);
+  --clay-paid: #3c6759;
+  --clay-paid-shade: rgb(5 25 20 / .50);
+  --clay-neutral: #49405c;
+  --clay-top: rgb(224 208 255 / .09);
+  --clay-bottom: rgb(8 5 21 / .16);
 }
 
 /* Text size option in the menu: everything is sized in rem, so this scales the whole app */
@@ -117,17 +123,17 @@ body {
 
 /* ---------- Surfaces ---------- */
 @utility glass {
-  background: var(--c-surface);
+  background: linear-gradient(145deg, var(--clay-top), transparent 48%, var(--clay-bottom)), var(--c-surface);
   border: 1px solid var(--clay-edge);
   box-shadow: var(--clay-shadow);
 }
 @utility glass-strong {
-  background: var(--c-surface);
+  background: linear-gradient(145deg, var(--clay-top), transparent 48%, var(--clay-bottom)), var(--c-surface);
   border: 1px solid var(--clay-edge);
   box-shadow: 0 24px 60px -20px rgb(0 0 0 / .35), var(--clay-shadow);
 }
 @utility glass-soft {
-  background: var(--c-surface);
+  background: linear-gradient(145deg, var(--clay-top), transparent 55%, var(--clay-bottom)), var(--c-surface);
   border: 1px solid var(--clay-edge);
   box-shadow: var(--clay-small);
 }
@@ -136,17 +142,17 @@ body {
   box-shadow: var(--clay-pressed);
 }
 @utility clay-input {
-  background: color-mix(in oklab, var(--c-surface) 72%, var(--c-bg));
+  background: linear-gradient(150deg, var(--clay-top), transparent 60%, var(--clay-bottom)), color-mix(in oklab, var(--clay-neutral) 55%, var(--c-surface));
   border-color: var(--clay-edge);
-  box-shadow: var(--clay-pressed);
+  box-shadow: var(--clay-small);
 }
 @utility clay-tile {
   box-shadow: var(--clay-small);
   border: 1px solid var(--clay-edge);
 }
 @utility clay-button {
-  background-image: linear-gradient(145deg, rgb(255 255 255 / .13), transparent 60%, rgb(0 0 0 / .06));
-  box-shadow: 3px 5px 9px -4px var(--clay-shade), inset 2px 2px 4px rgb(255 255 255 / .22), inset -2px -3px 5px rgb(0 0 0 / .14);
+  background-image: linear-gradient(145deg, rgb(255 255 255 / .22), transparent 55%, rgb(33 12 56 / .14));
+  box-shadow: 4px 7px 11px -3px var(--clay-shade), inset 3px 4px 6px rgb(255 255 255 / .32), inset -4px -5px 7px rgb(30 8 54 / .25);
   border: 1px solid var(--clay-edge);
 }
 @utility clay-selected {
@@ -158,17 +164,18 @@ body {
   border-color: var(--clay-edge);
 }
 @utility clay-bar {
-  box-shadow: inset 0 1px 2px var(--clay-light), 0 -4px 14px -9px var(--clay-shade);
+  background-image: linear-gradient(150deg, var(--clay-top), transparent 60%, var(--clay-bottom));
+  box-shadow: inset 2px 3px 6px var(--clay-light), inset -2px -3px 6px var(--clay-inner), 0 -3px 15px -8px var(--clay-shade);
 }
 @utility clay-member {
-  background: color-mix(in oklab, var(--c-surface) 85%, var(--c-bg));
+  background: linear-gradient(145deg, var(--clay-top), transparent 50%, var(--clay-bottom)), var(--clay-neutral);
   border: 1px solid var(--clay-edge);
   box-shadow: var(--clay-small);
   transition: background-color .15s, box-shadow .15s;
 }
 @utility clay-member-paid {
-  background: var(--clay-paid);
-  box-shadow: 3px 5px 9px -4px var(--clay-paid-shade), inset 1px 1px 3px var(--clay-light), inset -2px -2px 4px var(--clay-paid-shade);
+  background: linear-gradient(145deg, var(--clay-top), transparent 50%, var(--clay-bottom)), var(--clay-paid);
+  box-shadow: 4px 7px 10px -3px var(--clay-paid-shade), inset 2px 3px 5px var(--clay-light), inset -3px -4px 7px var(--clay-paid-shade);
 }
 @utility shimmer {
   background: linear-gradient(90deg, color-mix(in oklab, var(--c-fg) 5%, transparent) 0%, color-mix(in oklab, var(--c-fg) 11%, transparent) 50%, color-mix(in oklab, var(--c-fg) 5%, transparent) 100%);
@@ -202,6 +209,11 @@ input:-webkit-autofill {
 
 .clay-button:active, .clay-chip:active, .clay-member:active { box-shadow: var(--clay-pressed); }
 .clay-ghost:hover { box-shadow: var(--clay-small); }
+.clay-icon-holder { background: none; border: 0; box-shadow: none; }
+.clay-object { overflow: visible; flex-shrink: 0; }
+.clay-line-icon { filter: drop-shadow(1px 2px 1px var(--clay-shade)); }
+.clay-backdrop { background: radial-gradient(ellipse at 0% 0%, #fff5d5, transparent 55%), radial-gradient(ellipse at 95% 30%, #f5cedd, transparent 55%), radial-gradient(ellipse at 70% 100%, #e2d5f4, transparent 60%), var(--c-bg); }
+[data-theme="dark"] .clay-backdrop { background: radial-gradient(ellipse at 0% 0%, #393149, transparent 65%), radial-gradient(ellipse at 95% 90%, #343044, transparent 60%), var(--c-bg); }
 button:focus-visible, a:focus-visible { outline: 2px solid var(--c-accent-ink); outline-offset: 3px; }
 
 @media (prefers-reduced-motion: reduce) {
