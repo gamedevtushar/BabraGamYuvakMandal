@@ -1,7 +1,8 @@
 {
   "id": "../",
-  "name": "BabraGamYuvakMandal",
+  "name": "Babra Gam Yuvak Mandal",
   "short_name": "BGYM",
+  "lang": "en",
   "description": "Family charity fund contributions, expenses and reports",
   "start_url": "../",
   "scope": "../",

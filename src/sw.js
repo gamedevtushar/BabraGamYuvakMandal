@@ -31,7 +31,7 @@ self.addEventListener('push', (event) => {
     let d = {}
     try { d = event.data?.json() || {} } catch { d = { body: event.data?.text() || '' } }
     const palette = await (await caches.open(PREFS)).match('palette').then((r) => r?.text()).catch(() => null)
-    await self.registration.showNotification(d.title || 'BabraGamYuvakMandal', {
+    await self.registration.showNotification(d.title || 'Babra Gam Yuvak Mandal', {
       body: d.body || '', icon: `${BASE}icons/${palette || 'saffron'}-192.png`, badge: `${BASE}icons/${palette || 'saffron'}-192.png`,
       tag: 'maintenance-reminder', renotify: true, data: { link: d.link || BASE },
     })

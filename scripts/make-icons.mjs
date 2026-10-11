@@ -68,11 +68,12 @@ for (const pal of PALETTES) {
     [`${pal.id}-maskable.png`, 512, 0, 0.78], // Android crops to a circle → artwork inside the safe zone
   ]
   for (const [name, size, rx, k] of files) fs.writeFileSync(`public/icons/${name}`, render(pal, size, rx, k))
-  fs.writeFileSync(`public/icons/${pal.id}.webmanifest`, JSON.stringify({
+  for (const language of ['en', 'gu']) fs.writeFileSync(`public/icons/${pal.id}${language === 'gu' ? '.gu' : ''}.webmanifest`, JSON.stringify({
     id: '../',
-    name: 'BabraGamYuvakMandal',
-    short_name: 'BGYM',
-    description: 'Family charity fund contributions, expenses and reports',
+    name: language === 'gu' ? 'બાબરા ગામ યુવક મંડળ' : 'Babra Gam Yuvak Mandal',
+    short_name: language === 'gu' ? 'યુવક મંડળ' : 'BGYM',
+    lang: language,
+    description: language === 'gu' ? 'પરિવારનું સેવા ફંડ: ફાળો, ખર્ચ અને હિસાબ' : 'Family charity fund contributions, expenses and reports',
     start_url: '../',
     scope: '../',
     display: 'standalone',

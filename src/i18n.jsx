@@ -1,5 +1,6 @@
 import { en as fundEn, gu as fundGu } from './fund/messages'
-import { createContext, useContext, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
+import { applyTheme } from './theme'
 import { motion } from 'motion/react'
 
 /**
@@ -318,6 +319,11 @@ const LangContext = createContext(null)
 export function LangProvider({ children }) {
   const [lang, setLangState] = useState(current)
   document.documentElement.lang = lang
+  useEffect(() => {
+    document.title = t('appName')
+    document.querySelector('meta[name="apple-mobile-web-app-title"]')?.setAttribute('content', t('appName'))
+    applyTheme()
+  }, [lang])
   const setLang = (l) => {
     current = l
     try { localStorage.setItem('lang', l) } catch { /* ignore */ }

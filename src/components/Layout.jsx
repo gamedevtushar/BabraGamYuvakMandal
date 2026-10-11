@@ -32,7 +32,7 @@ function Logo() {
     <Link to="/" aria-label={t("appName")} className="flex min-w-0 items-center gap-3">
       <LogoMark className="size-10 shrink-0" />
       <div className="min-w-0 leading-tight">
-        <p className="text-base font-bold text-fg">BabraGam<br />YuvakMandal</p>
+        <p className="text-base font-bold text-fg">{t('appName')}</p>
         <p className="truncate text-xs text-muted">{t('appSub')}</p>
       </div>
     </Link>
@@ -121,7 +121,7 @@ export default function Layout() {
         {/* Slim phone top bar: logo and name. Pages put extra info in the two slots (Accounts: wing picker and balance). */}
         <header className="z-30 flex shrink-0 items-center gap-2 border-b border-bar-line bg-bar px-4 pb-1.5 pt-[calc(0.375rem+env(safe-area-inset-top))] lg:hidden">
           <LogoMark className="size-6 shrink-0" />
-          <p className="min-w-0 truncate text-sm font-bold text-fg">{t('appName')}</p>
+          <p className="min-w-0 text-sm font-bold leading-tight text-fg">{t('appName')}</p>
           <div id="topbar-left" className="contents" />
           <div id="topbar-right" className="ml-auto flex shrink-0 items-center" />
         </header>

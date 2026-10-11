@@ -30,7 +30,8 @@ export function applyTheme() {
   const base = import.meta.env.BASE_URL
   document.querySelector('link[rel=icon]')?.setAttribute('href', `data:image/svg+xml,${encodeURIComponent(logoSvg(pal))}`)
   document.querySelector('link[rel=apple-touch-icon]')?.setAttribute('href', `${base}icons/${pal.id}-180.png`)
-  document.querySelector('link[rel=manifest]')?.setAttribute('href', `${base}icons/${pal.id}.webmanifest`)
+  const languageSuffix = document.documentElement.lang === 'gu' ? '.gu' : ''
+  document.querySelector('link[rel=manifest]')?.setAttribute('href', `${base}icons/${pal.id}${languageSuffix}.webmanifest`)
   // The notification icon follows the theme too
   navigator.serviceWorker?.controller?.postMessage({ type: 'palette', id: pal.id })
   // Saved for the next start, so the right colours show before the app loads

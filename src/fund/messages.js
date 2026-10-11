@@ -1,8 +1,9 @@
 export const en = {
  edit:'Edit', 'login.showPassword':'Show password', 'login.hidePassword':'Hide password',
- appName:'BabraGamYuvakMandal', appSub:'Family charity fund', 'nav.units':'Members', 'nav.unitsShort':'Members',
+ appName:'Babra Gam Yuvak Mandal', appSub:'Family charity fund', 'nav.units':'Members', 'nav.unitsShort':'Members',
  'fund.admin':'Fund admin', 'fund.members':'Members', 'fund.contributions':'Contributions', 'fund.expenses':'Expenses',
- 'fund.received':'Contributed', 'fund.notRecorded':'Not recorded', 'fund.monthlyMembers':'Monthly contributions',
+ 'fund.received':'Contributed', 'fund.notContributed':'Not Contributed', 'fund.monthlyMembers':'Monthly contributions',
+ 'fund.otherEntries':'Other income & expenses', 'fund.otherIncome':'Other income', 'fund.otherEmpty':'No other income or expenses this month',
  'fund.member':'Member', 'fund.addMember':'Add member', 'fund.editMember':'Edit member', 'fund.name':'Name',
  'fund.occupation':'Occupation', 'fund.phone':'Phone', 'fund.active':'Active', 'fund.inactive':'Inactive', 'fund.status':'Status',
  'fund.addIn':'Add contribution', 'fund.addOut':'Add expense', 'fund.description':'What was it for?', 'fund.paidTo':'Paid to',
@@ -22,9 +23,10 @@ export const en = {
 }
 export const gu = {
  edit:'ફેરફાર', 'login.showPassword':'પાસવર્ડ બતાવો', 'login.hidePassword':'પાસવર્ડ છુપાવો',
- appName:'BabraGamYuvakMandal', appSub:'પરિવારનું સેવા ફંડ', 'nav.units':'સભ્યો', 'nav.unitsShort':'સભ્યો',
+ appName:'બાબરા ગામ યુવક મંડળ', appSub:'પરિવારનું સેવા ફંડ', 'nav.units':'સભ્યો', 'nav.unitsShort':'સભ્યો',
  'fund.admin':'ફંડ એડમિન', 'fund.members':'સભ્યો', 'fund.contributions':'ફાળો', 'fund.expenses':'ખર્ચ',
- 'fund.received':'ફાળો મળ્યો', 'fund.notRecorded':'નોંધ બાકી', 'fund.monthlyMembers':'માસિક ફાળો',
+ 'fund.received':'ફાળો આપ્યો', 'fund.notContributed':'ફાળો આપ્યો નથી', 'fund.monthlyMembers':'માસિક ફાળો',
+ 'fund.otherEntries':'અન્ય આવક અને ખર્ચ', 'fund.otherIncome':'અન્ય આવક', 'fund.otherEmpty':'આ મહિને અન્ય આવક કે ખર્ચ નથી',
  'fund.member':'સભ્ય', 'fund.addMember':'સભ્ય ઉમેરો', 'fund.editMember':'સભ્યમાં ફેરફાર', 'fund.name':'નામ',
  'fund.occupation':'વ્યવસાય', 'fund.phone':'ફોન', 'fund.active':'સક્રિય', 'fund.inactive':'નિષ્ક્રિય', 'fund.status':'સ્થિતિ',
  'fund.addIn':'ફાળો ઉમેરો', 'fund.addOut':'ખર્ચ ઉમેરો', 'fund.description':'ખર્ચની વિગત', 'fund.paidTo':'કોને ચૂકવ્યા',

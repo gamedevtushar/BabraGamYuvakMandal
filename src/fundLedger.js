@@ -1,5 +1,17 @@
 export const total = rows => rows.reduce((sum, row) => sum + Math.round(Number(row.amount || 0) * 100), 0) / 100
 export const monthOf = row => row.date?.slice(0, 7) || row.month || ''
+// Partition before search so filtering the cards never duplicates income below them.
+export function contributionSummary(members, donations) {
+  const memberIds = new Set(members.map(member => member.id))
+  const amounts = new Map()
+  const otherIncome = []
+  for (const row of donations) {
+    if (!memberIds.has(row.memberId)) { otherIncome.push(row); continue }
+    amounts.set(row.memberId, (amounts.get(row.memberId) || 0) + Math.round(Number(row.amount || 0) * 100))
+  }
+  const people = members.filter(member => member.status !== 'inactive' || amounts.has(member.id))
+  return { amounts, people, otherIncome, contributed: amounts.size, notContributed: people.filter(member => !amounts.has(member.id)).length }
+}
 export function monthlyLedger(donations, expenses) {
   const months = [...new Set([...donations, ...expenses].map(monthOf).filter(Boolean))].sort()
   let balance = 0
