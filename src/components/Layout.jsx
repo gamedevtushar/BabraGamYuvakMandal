@@ -1,7 +1,7 @@
 
 import { NavLink, Link, useLocation, useOutlet, useNavigate } from 'react-router-dom'
 import { motion, AnimatePresence } from 'motion/react'
-import { Wallet, Palette, BarChart3, Users, LogOut, KeyRound, Plus, Menu as MenuIcon, LogIn, Eye, Download, Coins } from 'lucide-react'
+import { Wallet, BarChart3, Users, LogOut, KeyRound, Plus, Menu as MenuIcon, LogIn, Eye, Download, Coins } from 'lucide-react'
 import { useAuth, roleLabel } from '../context/AuthContext'
 
 import { t, LangSwitch } from '../i18n'
@@ -74,7 +74,7 @@ export default function Layout() {
             <NavLink key={to} to={to} end={end}
               className={({ isActive }) => cx('relative flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-base font-medium transition-colors', isActive ? 'text-accent-ink' : 'text-muted hover:bg-fg/[0.05] hover:text-fg')}>
               {({ isActive }) => <>
-                {isActive && <motion.span layoutId="side-active" transition={spring} className="absolute inset-0 rounded-xl bg-accent/10" />}
+                {isActive && <motion.span layoutId="side-active" transition={spring} className="clay-selected absolute inset-0 rounded-xl bg-accent/10" />}
                 <Icon className="relative size-[1.125rem]" /><span className="relative">{t(`nav.${key}`)}</span>
               </>}
             </NavLink>
@@ -86,15 +86,11 @@ export default function Layout() {
             </button>
           )}
         </nav>
-        <div className="m-3 space-y-3 rounded-xl border border-fg/10 bg-fg/[0.03] p-3">
+        <div className="clay-inset m-3 space-y-3 rounded-2xl p-3">
           <div className="flex flex-wrap items-center justify-between gap-2">
             <LangSwitch />
             <ThemeSwitch />
             <TextSizeSwitch />
-            <button type="button" aria-label={t('palette')} title={t('palette')} onClick={() => forms.open('palette')}
-              className="flex size-9 items-center justify-center rounded-xl border border-fg/10 bg-[linear-gradient(135deg,var(--logo-1),var(--logo-2))] text-white cursor-pointer">
-              <Palette className="size-4" />
-            </button>
           </div>
           {isLoggedIn ? (
             <>
@@ -123,7 +119,7 @@ export default function Layout() {
       <div className="flex min-w-0 flex-1 flex-col">
         {/* Phone top bar */}
         {/* Slim phone top bar: logo and name. Pages put extra info in the two slots (Accounts: wing picker and balance). */}
-        <header className="z-30 flex shrink-0 items-center gap-2 border-b border-bar-line bg-bar px-4 pb-1.5 pt-[calc(0.375rem+env(safe-area-inset-top))] lg:hidden">
+        <header className="clay-bar z-30 flex shrink-0 items-center gap-2 bg-bar px-4 pb-2 pt-[calc(0.5rem+env(safe-area-inset-top))] lg:hidden">
           <LogoMark className="size-6 shrink-0" />
           <p title={t('appName')} className="min-w-0 text-sm font-bold leading-tight text-fg">{t('appName')}</p>
           <div id="topbar-left" className="contents" />
@@ -143,13 +139,13 @@ export default function Layout() {
         </main>
 
         {/* Phone bottom bar: docked under the scroll area, so nothing shows beneath it */}
-        <nav className="z-30 shrink-0 border-t border-bar-line bg-bar pb-[env(safe-area-inset-bottom)] lg:hidden">
+        <nav className="clay-bar z-30 shrink-0 bg-bar pb-[env(safe-area-inset-bottom)] lg:hidden">
           <div className={cx('mx-auto grid max-w-lg items-center gap-1 px-2 py-1.5', mobileTabs.length === 4 ? 'grid-cols-4' : 'grid-cols-3')}>
             {mobileTabs.map((item) => {
               if (item.fab) return (
                 <div key="fab" className="flex justify-center">
                   <motion.button type="button" aria-label={t('quickAdd')} whileTap={{ scale: 0.9 }} onClick={() => forms.open('quickAdd')}
-                    className="flex size-12 items-center justify-center rounded-2xl bg-accent text-white shadow-md shadow-accent/30 cursor-pointer">
+                    className="clay-button flex size-12 items-center justify-center rounded-2xl bg-accent text-white cursor-pointer">
                     <Plus className="size-6" />
                   </motion.button>
                 </div>
@@ -163,7 +159,7 @@ export default function Layout() {
               return (
                 <NavLink key={to} to={to} end={end} className="relative flex flex-col items-center gap-1 rounded-xl py-2 text-[0.8125rem] font-medium">
                   {({ isActive }) => <>
-                    {isActive && <motion.span layoutId="bottom-active" transition={spring} className="absolute inset-0 rounded-xl bg-bar-pill" />}
+                    {isActive && <motion.span layoutId="bottom-active" transition={spring} className="clay-selected absolute inset-0 rounded-2xl bg-bar-pill" />}
                     <Icon className={cx('relative size-[1.375rem]', isActive ? 'text-accent-ink' : 'text-muted')} />
                     <span className={cx('relative max-w-full truncate px-0.5', isActive ? 'font-semibold text-accent-ink' : 'text-muted')}>{t(`nav.${key}Short`)}</span>
                   </>}

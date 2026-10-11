@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { motion } from 'motion/react'
-import { Wallet, Users, Plus, Check, Minus, ChevronRight, ArrowDownCircle, ArrowUpCircle, Download } from 'lucide-react'
+import { Wallet, Users, Plus, ChevronRight, ArrowDownCircle, ArrowUpCircle, Download } from 'lucide-react'
 import { useAuth } from '../context/AuthContext'
 import { useFund } from './Context'
 import { forms } from './Forms'
@@ -55,23 +55,22 @@ export function Accounts() {
   const rows=rowsFor(summary.otherIncome,outMonth).filter(r=>kind==='all'||r.kind===kind)
   return <LoadState>{slots?.right&&createPortal(<div className="rounded-lg bg-accent/12 px-2.5 py-1 text-right leading-none"><p className="text-[0.625rem] font-semibold text-muted">{t('r.balance')}</p><p className="mt-0.5 text-base font-bold whitespace-nowrap tabular-nums text-accent-ink">{loading||error?'—':inr(balance)}</p></div>,slots.right)}
     <div className="sticky top-0 z-20 -mx-4 -mt-4 mb-3 shrink-0 space-y-2 bg-bg/95 px-4 pb-2 pt-2 backdrop-blur-md sm:-mx-6 sm:px-6 lg:static lg:mx-0 lg:mt-0 lg:bg-transparent lg:px-0 lg:pt-0 lg:backdrop-blur-none">
-      <div className="hidden items-center gap-3 rounded-xl bg-[linear-gradient(90deg,var(--logo-1),var(--logo-2))] px-3.5 py-2 text-white shadow-sm lg:flex"><Wallet className="size-5"/><p className="flex-1 text-xs font-semibold">{t('appName')} · {t('fund.allTime')}</p><p className="text-xl font-bold">{inr(balance)}</p></div>
-      <div className="grid grid-cols-4 divide-x divide-fg/10 rounded-lg border border-fg/10 bg-surface py-1"><Figure label={t('fund.received')} value={summary.contributed} amount={false} tone="text-ok"/><Figure label={t('fund.notContributed')} value={summary.notContributed} amount={false}/><Figure label={t('income')} value={total(inMonth)} tone="text-ok"/><Figure label={t('expense')} value={total(outMonth)} tone="text-bad"/></div>
+      <div className="clay-button hidden items-center gap-3 rounded-2xl bg-accent px-4 py-3 text-white lg:flex"><Wallet className="size-5"/><p className="flex-1 text-xs font-semibold">{t('appName')} · {t('fund.allTime')}</p><p className="text-xl font-bold">{inr(balance)}</p></div>
+      <div className="clay-inset grid grid-cols-4 divide-x divide-fg/10 rounded-2xl py-2"><Figure label={t('fund.received')} value={summary.contributed} amount={false} tone="text-ok"/><Figure label={t('fund.notContributed')} value={summary.notContributed} amount={false}/><Figure label={t('income')} value={total(inMonth)} tone="text-ok"/><Figure label={t('expense')} value={total(outMonth)} tone="text-bad"/></div>
     </div>
     <div className="mb-3 grid gap-3 lg:min-h-0 lg:flex-1 lg:grid-cols-5 lg:gap-4">
       <ScrollCard className="!min-h-0 lg:col-span-3" bodyClass="p-2.5 sm:p-3" header={<div className="space-y-2 px-3 pt-3"><div className="flex items-center gap-2"><h2 className="flex-1 text-sm font-semibold text-muted">{t('fund.monthlyMembers')}</h2>{isAdmin&&<Button size="sm" variant="success" icon={Plus} onClick={()=>forms.open('entry',{kind:'donations',period})}>{t('fund.addIn')}</Button>}</div><Input aria-label={t('searchPh')} placeholder={t('searchPh')} value={search} onChange={e=>setSearch(e.target.value)} className="!h-9 !text-sm"/></div>}>
         {!people.length?<EmptyState icon={Users} title={t('fund.noMembers')}/>:<div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">{people.map((m,i)=>{
-          const paid=amounts.has(m.id),amount=(amounts.get(m.id)||0)/100,StatusIcon=paid?Check:Minus
-          return <motion.button key={m.id} type="button" onClick={()=>forms.open('memberHistory',{member:m,period})} whileTap={{scale:.98}} initial={{opacity:0,y:5}} animate={{opacity:1,y:0}} transition={{delay:Math.min(i,18)*.015}} className={cx('group flex min-w-0 items-center gap-3 rounded-2xl border p-3 text-left transition-colors cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',paid?'border-ok/20 bg-ok/[0.06] hover:bg-ok/10':'border-fg/10 bg-fg/[0.02] hover:bg-fg/[0.05]')}>
-            <span className={cx('flex size-9 shrink-0 items-center justify-center rounded-full',paid?'bg-ok/15 text-ok':'bg-fg/[0.06] text-subtle')}><StatusIcon className="size-4" strokeWidth={2.5}/></span>
-            <span className="min-w-0 flex-1"><span className="block text-sm font-semibold leading-snug break-words text-fg">{displayName(m)}</span><span className={cx('mt-1 block text-[0.6875rem] font-medium',paid?'text-ok':'text-muted')}>{t(paid?'fund.received':'fund.notContributed')}</span></span>
-            <span className={cx('shrink-0 text-sm font-bold tabular-nums',paid?'text-ok':'text-subtle')}>{paid?inr(amount):'—'}</span><ChevronRight className="size-3.5 shrink-0 text-subtle"/>
+          const paid=amounts.has(m.id),amount=(amounts.get(m.id)||0)/100
+          return <motion.button key={m.id} type="button" aria-label={`${displayName(m)}, ${t(paid?'fund.received':'fund.notContributed')}${paid?`, ${inr(amount)}`:''}`} onClick={()=>forms.open('memberHistory',{member:m,period})} whileTap={{scale:.98}} initial={{opacity:0,y:5}} animate={{opacity:1,y:0}} transition={{delay:Math.min(i,18)*.015}} className={cx('clay-member group flex min-h-12 min-w-0 items-center gap-2 rounded-2xl px-3.5 py-2.5 text-left cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent',paid&&'clay-member-paid')}>
+            <span className="min-w-0 flex-1 text-sm font-semibold leading-snug break-words text-fg">{displayName(m)}</span>
+            {paid&&<span className="shrink-0 text-sm font-bold tabular-nums text-ok">{inr(amount)}</span>}<ChevronRight className="size-3.5 shrink-0 text-subtle"/>
           </motion.button>
         })}</div>}
       </ScrollCard>
       <ScrollCard className="lg:col-span-2" header={<div className="space-y-2 px-3 pt-3"><div className="flex items-center gap-2"><h2 className="flex-1 text-sm font-semibold text-muted">{t('fund.otherEntries')}</h2>{isAdmin&&<Button size="sm" icon={Plus} onClick={()=>forms.open('entry',{kind:'expenses',period})}>{t('add')}</Button>}</div><div className="flex gap-1">{[['all','all'],['donations','fund.otherIncome'],['expenses','expense']].map(([v,k])=><button key={v} onClick={()=>setKind(v)} aria-pressed={kind===v} className={cx('flex-1 rounded-lg px-2 py-1 text-xs cursor-pointer',kind===v?'bg-accent/12 text-accent-ink font-semibold':'text-muted')}>{t(k)}</button>)}</div></div>}><EntryList rows={rows} emptyTitle={kind==='all'?t('fund.otherEmpty'):t('fund.empty')}/></ScrollCard>
     </div>
-    <div className="sticky bottom-0 z-20 -mx-4 -mb-6 mt-auto flex shrink-0 items-center gap-1 border-t border-bar-line bg-bar px-2 py-1 sm:-mx-6 sm:px-4 lg:static lg:mx-0 lg:mb-0 lg:mt-4 lg:rounded-xl lg:border lg:px-2"><SnapScroller items={months} value={period} onChange={setPeriod} className="min-w-0 flex-1" itemWidth="7.5rem"/><IconButton icon={Download} label={t('fund.export')} variant="secondary" className="size-10" onClick={()=>exportRows(rowsFor(inMonth,outMonth),period)}/></div>
+    <div className="clay-bar sticky bottom-0 z-20 -mx-4 -mb-6 mt-auto flex shrink-0 items-center gap-1 bg-bar px-2 py-2 sm:-mx-6 sm:px-4 lg:static lg:mx-0 lg:mb-0 lg:mt-4 lg:rounded-2xl lg:px-2"><SnapScroller items={months} value={period} onChange={setPeriod} className="min-w-0 flex-1" itemWidth="7.5rem"/><IconButton icon={Download} label={t('fund.export')} variant="secondary" className="size-10" onClick={()=>exportRows(rowsFor(inMonth,outMonth),period)}/></div>
   </LoadState>
 }
 export function Members(){

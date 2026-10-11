@@ -59,7 +59,7 @@ export function Button({ variant = 'primary', size = 'md', icon: Icon, loading, 
       transition={spring}
       className={cx(
         'inline-flex items-center justify-center font-semibold transition-[background,box-shadow,filter,color,border] duration-150 disabled:opacity-45 disabled:pointer-events-none cursor-pointer whitespace-nowrap select-none',
-        VARIANTS[variant], sizes[size], className,
+        variant==='ghost'||variant==='dangerGhost'?'clay-ghost':'clay-button', VARIANTS[variant], sizes[size], className,
       )}
       {...props}
       disabled={disabled}
@@ -111,7 +111,7 @@ export function IconButton({ icon: Icon, label, variant = 'ghost', size = 'icon'
 export function Card({ className, children, hover, ...props }) {
   return (
     <motion.div variants={itemVariants} whileHover={hover ? { y: -2 } : undefined} transition={spring}
-      className={cx('glass rounded-2xl', className)} {...props}>
+      className={cx('glass rounded-3xl', className)} {...props}>
       {children}
     </motion.div>
   )
@@ -127,7 +127,7 @@ const TILE = {
 }
 export function IconTile({ icon: Icon, tone = 'indigo', className = 'size-10', iconClass = 'size-5' }) {
   return (
-    <div className={cx('flex shrink-0 items-center justify-center rounded-xl', TILE[tone], className)}>
+    <div className={cx('clay-tile flex shrink-0 items-center justify-center rounded-2xl', TILE[tone], className)}>
       <Icon className={iconClass} />
     </div>
   )
@@ -135,7 +135,7 @@ export function IconTile({ icon: Icon, tone = 'indigo', className = 'size-10', i
 
 /* ============ Form fields ============ */
 // 16px text on phones stops iOS from zooming into the field
-const fieldBase = 'w-full h-12 rounded-xl border bg-fg/[0.03] px-3.5 text-base text-fg placeholder:text-subtle outline-none transition duration-150 hover:border-fg/25 focus:bg-surface focus:ring-4 disabled:opacity-50 sm:text-base'
+const fieldBase = 'clay-input w-full h-12 rounded-2xl border bg-fg/[0.03] px-3.5 text-base text-fg placeholder:text-subtle outline-none transition duration-150 hover:border-fg/25 focus:bg-surface focus:ring-4 disabled:opacity-50 sm:text-base'
 const fieldCls = (invalid) => cx(fieldBase, invalid
   ? 'border-bad/60 focus:border-bad focus:ring-bad/15'
   : 'border-fg/12 focus:border-accent focus:ring-accent/15')
@@ -171,11 +171,11 @@ export const Input = ({ className, invalid, ...p }) => <input className={cx(fiel
 /** Rupee amount input */
 export function AmountInput({ value, onChange, invalid, autoFocus, size = 'lg', placeholder = '0' }) {
   return (
-    <div className={cx('flex items-center gap-2 rounded-xl border bg-fg/[0.03] px-4 transition focus-within:bg-surface focus-within:ring-4',
+    <div className={cx('clay-input flex items-center gap-2 rounded-2xl border bg-fg/[0.03] px-4 transition focus-within:bg-surface focus-within:ring-4',
       size === 'lg' ? 'h-16' : 'h-12',
       invalid ? 'border-bad/60 focus-within:ring-bad/15' : 'border-fg/12 focus-within:border-accent focus-within:ring-accent/15')}>
       <span className={cx('font-semibold text-subtle', size === 'lg' ? 'text-2xl' : 'text-lg')}>₹</span>
-      <input inputMode="decimal" autoFocus={autoFocus} value={value} placeholder={placeholder}
+      <input aria-label={t('amount')} inputMode="decimal" autoFocus={autoFocus} value={value} placeholder={placeholder}
         onChange={(e) => onChange(e.target.value.replace(/[^\d.]/g, ''))}
         className={cx('w-full min-w-0 bg-transparent font-bold text-fg outline-none placeholder:text-subtle/60', size === 'lg' ? 'text-3xl' : 'text-lg')} />
     </div>
@@ -209,7 +209,7 @@ export function Chips({ value, onChange, options, className, variant = 'pill', s
         return (
           <motion.button key={String(o.value)} type="button" whileTap={{ scale: 0.96 }} onClick={() => onChange(o.value)} aria-pressed={active}
             className={cx(
-              'relative inline-flex shrink-0 items-center rounded-xl border font-medium transition-colors cursor-pointer',
+              'clay-chip relative inline-flex shrink-0 items-center rounded-xl border font-medium transition-colors cursor-pointer',
               tile ? 'min-h-16 flex-col justify-center gap-1.5 px-2 py-2.5 text-center text-xs' : 'h-10 gap-2 px-3.5 text-sm whitespace-nowrap',
               active ? chipOn : chipOff,
             )}>
@@ -230,7 +230,7 @@ export function DateField({ value, onChange }) {
     <div className="flex gap-2">
       {quick.map((q) => (
         <motion.button key={q.label} type="button" whileTap={{ scale: 0.96 }} onClick={() => onChange(q.value)} aria-pressed={value === q.value}
-          className={cx('h-11 shrink-0 rounded-xl border px-3.5 text-sm font-medium transition-colors cursor-pointer', value === q.value ? chipOn : chipOff)}>
+          className={cx('clay-chip h-11 shrink-0 rounded-xl border px-3.5 text-sm font-medium transition-colors cursor-pointer', value === q.value ? chipOn : chipOff)}>
           {q.label}
         </motion.button>
       ))}

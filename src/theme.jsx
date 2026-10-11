@@ -1,27 +1,32 @@
 import { useSyncExternalStore } from 'react'
 import { motion } from 'motion/react'
-import { Sun, Moon, Monitor, Check } from 'lucide-react'
+import { Sun, Moon, Check } from 'lucide-react'
 import { PALETTES, DEFAULT_PALETTE, paletteById, paletteVars, logoSvg } from './palettes'
 
-/** Theme preference: 'light' | 'dark' | 'system'. Applied as data-theme on <html>. */
+/** A single clay palette with light and dark modes. */
 const KEY = 'theme'
 const listeners = new Set()
 const media = window.matchMedia('(prefers-color-scheme: dark)')
 
 export const getThemePref = () => {
-  try { return localStorage.getItem(KEY) || 'system' } catch { return 'system' }
+  try { const saved=localStorage.getItem(KEY); return saved==='light'||saved==='dark'?saved:media.matches?'dark':'light' } catch { return media.matches?'dark':'light' }
 }
-const resolve = (pref) => (pref === 'system' ? (media.matches ? 'dark' : 'light') : pref)
+const resolve = pref => pref
 
 /** Colour theme (one of 10 palettes) */
 const PAL_KEY = 'palette'
 export const getPalette = () => {
-  try { return paletteById(localStorage.getItem(PAL_KEY) || DEFAULT_PALETTE).id } catch { return DEFAULT_PALETTE }
+  return DEFAULT_PALETTE
+}
+const clayPalette = {
+  ...paletteById(DEFAULT_PALETTE),
+  light: { bg:'#eee8e1', surface:'#f8f3ed', bar:'#f3ede6', fg:'#302b28', muted:'#68605b', subtle:'#817670', accent:'#b84e2d', ink:'#923b22' },
+  dark: { bg:'#22212a', surface:'#33313d', bar:'#2d2b36', fg:'#f7f1eb', muted:'#c2b9b4', subtle:'#a99e9a', accent:'#b84e2d', ink:'#ffc1a4' },
 }
 
 export function applyTheme() {
   const theme = resolve(getThemePref())
-  const pal = paletteById(getPalette())
+  const pal = clayPalette
   const root = document.documentElement
   root.dataset.theme = theme
   for (const [k, v] of Object.entries(paletteVars(pal, theme))) root.style.setProperty(k, v)
@@ -35,7 +40,7 @@ export function applyTheme() {
   // The notification icon follows the theme too
   navigator.serviceWorker?.controller?.postMessage({ type: 'palette', id: pal.id })
   // Saved for the next start, so the right colours show before the app loads
-  try { localStorage.setItem('themeVars', JSON.stringify({ light: paletteVars(pal, 'light'), dark: paletteVars(pal, 'dark'), bar: { light: pal.light.bar, dark: pal.dark.bar } })) } catch { /* storage unavailable */ }
+  try { localStorage.setItem('themeVars', JSON.stringify({ version:'clay-1', light: paletteVars(pal, 'light'), dark: paletteVars(pal, 'dark'), bar: { light: pal.light.bar, dark: pal.dark.bar } })) } catch { /* storage unavailable */ }
 }
 
 export function setPalette(id) {
@@ -79,7 +84,6 @@ export const useThemePref = () => useSyncExternalStore((cb) => { listeners.add(c
 const OPTIONS = [
   { value: 'light', icon: Sun, label: 'Light' },
   { value: 'dark', icon: Moon, label: 'Dark' },
-  { value: 'system', icon: Monitor, label: 'Auto' },
 ]
 
 /** Text size preference: 'normal' | 'large' | 'xl'. Applied as data-text on <html>, which scales every rem. */
@@ -108,13 +112,13 @@ const SIZES = [
 export function TextSizeSwitch({ className = '' }) {
   const size = useTextSize()
   return (
-    <div role="radiogroup" aria-label="Text size" className={`inline-flex rounded-xl border border-fg/10 bg-fg/[0.04] p-0.5 ${className}`}>
+    <div role="radiogroup" aria-label="Text size" className={`clay-inset inline-flex rounded-xl p-1 ${className}`}>
       {SIZES.map(({ value, label, className: textClass }) => {
         const active = size === value
         return (
           <button key={value} type="button" role="radio" aria-checked={active} aria-label={label} onClick={() => setTextSize(value)}
             className={`relative flex size-8 items-center justify-center rounded-lg font-bold transition-colors cursor-pointer ${textClass} ${active ? 'text-fg' : 'text-subtle hover:text-fg'}`}>
-            {active && <motion.span layoutId="text-pill" className="absolute inset-0 rounded-lg bg-surface shadow-sm ring-1 ring-fg/10" />}
+            {active && <motion.span layoutId="text-pill" className="clay-selected absolute inset-0 rounded-lg bg-surface" />}
             <span className="relative leading-none">A</span>
           </button>
         )
@@ -123,17 +127,17 @@ export function TextSizeSwitch({ className = '' }) {
   )
 }
 
-/** Compact Light / Dark / Auto switch */
+/** Compact Light / Dark switch */
 export function ThemeSwitch({ className = '' }) {
   const pref = useThemePref()
   return (
-    <div role="radiogroup" aria-label="Theme" className={`inline-flex rounded-xl border border-fg/10 bg-fg/[0.04] p-0.5 ${className}`}>
+    <div role="radiogroup" aria-label="Theme" className={`clay-inset inline-flex rounded-xl p-1 ${className}`}>
       {OPTIONS.map(({ value, icon: Icon, label }) => {
         const active = pref === value
         return (
           <button key={value} type="button" role="radio" aria-checked={active} aria-label={label} onClick={() => setThemePref(value)}
             className={`relative flex size-8 items-center justify-center rounded-lg transition-colors cursor-pointer ${active ? 'text-fg' : 'text-subtle hover:text-fg'}`}>
-            {active && <motion.span layoutId="theme-pill" className="absolute inset-0 rounded-lg bg-surface shadow-sm ring-1 ring-fg/10" />}
+            {active && <motion.span layoutId="theme-pill" className="clay-selected absolute inset-0 rounded-lg bg-surface" />}
             <Icon className="relative size-4" />
           </button>
         )

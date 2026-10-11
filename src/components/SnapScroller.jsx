@@ -110,7 +110,7 @@ export default function SnapScroller({ items, value, onChange, className, itemWi
   return (
     <div className={cx('relative', className)} data-no-tick>
       {/* the highlight pill in the middle */}
-      <span aria-hidden className="pointer-events-none absolute inset-y-1 left-1/2 -translate-x-1/2 rounded-xl bg-accent/12 ring-1 ring-accent/35" style={{ width: itemWidth }} />
+      <span aria-hidden className="clay-selected pointer-events-none absolute inset-y-1 left-1/2 -translate-x-1/2 rounded-xl bg-accent/12" style={{ width: itemWidth }} />
       <div ref={ref} onScroll={onScroll} onScrollEnd={() => settleSoon(40)}
         onTouchStart={onTouchStart} onTouchEnd={onTouchEnd} onTouchCancel={onTouchEnd}
         onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={endDrag} onPointerLeave={endDrag}

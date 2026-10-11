@@ -12,6 +12,8 @@ test('monthly setup defaults to 200 and accepts only positive amounts with two d
 test('defaults fill only new contributions and never replace existing records or expense values', () => {
   assert.equal(initialEntryAmount('donations',undefined,200),'200')
   assert.equal(initialEntryAmount('donations',undefined,250),'250')
+  assert.equal(initialEntryAmount('donations',undefined,null),'200')
+  assert.equal(initialEntryAmount('donations',undefined,undefined),'200')
   assert.equal(initialEntryAmount('donations',{amount:150},250),'150')
   assert.equal(initialEntryAmount('expenses',undefined,250),'')
   assert.equal(initialEntryAmount('expenses',{amount:850},250),'850')

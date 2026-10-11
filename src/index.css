@@ -46,49 +46,56 @@
 
 :root {
   color-scheme: light;
-  --c-bg: #f6f3ee;
-  --c-fg: #1c1917;
-  --c-muted: #57534e;
-  --c-subtle: #78716c;
-  --c-surface: #ffffff;
-  --c-accent: #c2410c;
-  --c-accent-ink: #9a3412;
-  --c-ok: #047857;
+  --c-bg: #eee8e1;
+  --c-fg: #302b28;
+  --c-muted: #68605b;
+  --c-subtle: #817670;
+  --c-surface: #f8f3ed;
+  --c-accent: #b84e2d;
+  --c-accent-ink: #923b22;
+  --c-ok: #23664a;
   --c-bad: #be123c;
   --c-warn: #a16207;
   --c-info: #0369a1;
-  --c-bar: #fff3e6;
+  --c-bar: #f3ede6;
   --c-bar-line: color-mix(in oklab, var(--c-accent) 16%, transparent);
-  --c-bar-pill: #ffffff;
+  --c-bar-pill: #f8ded0;
   --logo-1: #f97316;
   --logo-2: #c2410c;
   --logo-dot: #fef3c7;
-  --glass-bg: rgb(255 255 255 / 0.86);
-  --glass-strong-bg: rgb(255 255 255 / 0.98);
-  --glass-border: rgb(28 25 23 / 0.08);
-  --glass-shadow: 0 1px 2px rgb(28 25 23 / 0.04), 0 8px 24px -12px rgb(120 53 15 / 0.16);
+  --clay-light: rgb(255 255 255 / .85);
+  --clay-shade: rgb(128 99 77 / .16);
+  --clay-edge: rgb(255 255 255 / .55);
+  --clay-inner: rgb(137 104 79 / .10);
+  --clay-shadow: 7px 9px 18px -7px var(--clay-shade), -4px -4px 12px -5px var(--clay-light), inset 2px 2px 4px var(--clay-light), inset -3px -3px 6px var(--clay-inner);
+  --clay-small: 3px 5px 9px -4px var(--clay-shade), inset 1px 1px 3px var(--clay-light), inset -2px -2px 4px var(--clay-inner);
+  --clay-pressed: inset 2px 3px 6px var(--clay-shade), inset -2px -2px 5px var(--clay-light);
+  --clay-paid: #d6ebdc;
+  --clay-paid-shade: rgb(41 100 64 / .15);
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
-  --c-bg: #12100e;
-  --c-fg: #f5f5f4;
-  --c-muted: #a8a29e;
-  --c-subtle: #8a817c;
-  --c-surface: #1c1917;
-  --c-accent: #ea580c;
-  --c-accent-ink: #fdba74;
-  --c-ok: #34d399;
+  --c-bg: #22212a;
+  --c-fg: #f7f1eb;
+  --c-muted: #c2b9b4;
+  --c-subtle: #a99e9a;
+  --c-surface: #33313d;
+  --c-accent: #b84e2d;
+  --c-accent-ink: #ffc1a4;
+  --c-ok: #9cdeb2;
   --c-bad: #fb7185;
   --c-warn: #facc15;
   --c-info: #38bdf8;
-  --c-bar: #211710;
+  --c-bar: #2d2b36;
   --c-bar-line: color-mix(in oklab, var(--c-accent) 20%, transparent);
   --c-bar-pill: color-mix(in oklab, var(--c-accent) 22%, transparent);
-  --glass-bg: color-mix(in oklab, var(--c-surface) 82%, transparent);
-  --glass-strong-bg: color-mix(in oklab, var(--c-surface) 98%, transparent);
-  --glass-border: rgb(214 211 209 / 0.1);
-  --glass-shadow: 0 10px 30px -14px rgb(0 0 0 / 0.65);
+  --clay-light: rgb(255 255 255 / .09);
+  --clay-shade: rgb(0 0 0 / .45);
+  --clay-edge: rgb(255 255 255 / .065);
+  --clay-inner: rgb(0 0 0 / .20);
+  --clay-paid: #2e4b3d;
+  --clay-paid-shade: rgb(0 0 0 / .30);
 }
 
 /* Text size option in the menu: everything is sized in rem, so this scales the whole app */
@@ -110,22 +117,58 @@ body {
 
 /* ---------- Surfaces ---------- */
 @utility glass {
-  background: var(--glass-bg);
-  backdrop-filter: blur(14px) saturate(140%);
-  -webkit-backdrop-filter: blur(14px) saturate(140%);
-  border: 1px solid var(--glass-border);
-  box-shadow: var(--glass-shadow);
+  background: var(--c-surface);
+  border: 1px solid var(--clay-edge);
+  box-shadow: var(--clay-shadow);
 }
 @utility glass-strong {
-  background: var(--glass-strong-bg);
-  backdrop-filter: blur(18px);
-  -webkit-backdrop-filter: blur(18px);
-  border: 1px solid var(--glass-border);
-  box-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.35);
+  background: var(--c-surface);
+  border: 1px solid var(--clay-edge);
+  box-shadow: 0 24px 60px -20px rgb(0 0 0 / .35), var(--clay-shadow);
 }
 @utility glass-soft {
-  background: color-mix(in oklab, var(--c-fg) 4%, transparent);
-  border: 1px solid var(--glass-border);
+  background: var(--c-surface);
+  border: 1px solid var(--clay-edge);
+  box-shadow: var(--clay-small);
+}
+@utility clay-inset {
+  background: color-mix(in oklab, var(--c-surface) 60%, var(--c-bg));
+  box-shadow: var(--clay-pressed);
+}
+@utility clay-input {
+  background: color-mix(in oklab, var(--c-surface) 72%, var(--c-bg));
+  border-color: var(--clay-edge);
+  box-shadow: var(--clay-pressed);
+}
+@utility clay-tile {
+  box-shadow: var(--clay-small);
+  border: 1px solid var(--clay-edge);
+}
+@utility clay-button {
+  background-image: linear-gradient(145deg, rgb(255 255 255 / .13), transparent 60%, rgb(0 0 0 / .06));
+  box-shadow: 3px 5px 9px -4px var(--clay-shade), inset 2px 2px 4px rgb(255 255 255 / .22), inset -2px -3px 5px rgb(0 0 0 / .14);
+  border: 1px solid var(--clay-edge);
+}
+@utility clay-selected {
+  box-shadow: var(--clay-small);
+  border: 1px solid var(--clay-edge);
+}
+@utility clay-chip {
+  box-shadow: var(--clay-small);
+  border-color: var(--clay-edge);
+}
+@utility clay-bar {
+  box-shadow: inset 0 1px 2px var(--clay-light), 0 -4px 14px -9px var(--clay-shade);
+}
+@utility clay-member {
+  background: color-mix(in oklab, var(--c-surface) 85%, var(--c-bg));
+  border: 1px solid var(--clay-edge);
+  box-shadow: var(--clay-small);
+  transition: background-color .15s, box-shadow .15s;
+}
+@utility clay-member-paid {
+  background: var(--clay-paid);
+  box-shadow: 3px 5px 9px -4px var(--clay-paid-shade), inset 1px 1px 3px var(--clay-light), inset -2px -2px 4px var(--clay-paid-shade);
 }
 @utility shimmer {
   background: linear-gradient(90deg, color-mix(in oklab, var(--c-fg) 5%, transparent) 0%, color-mix(in oklab, var(--c-fg) 11%, transparent) 50%, color-mix(in oklab, var(--c-fg) 5%, transparent) 100%);
@@ -156,6 +199,10 @@ input:-webkit-autofill {
 }
 
 ::selection { background: color-mix(in oklab, var(--c-accent) 30%, transparent); }
+
+.clay-button:active, .clay-chip:active, .clay-member:active { box-shadow: var(--clay-pressed); }
+.clay-ghost:hover { box-shadow: var(--clay-small); }
+button:focus-visible, a:focus-visible { outline: 2px solid var(--c-accent-ink); outline-offset: 3px; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }

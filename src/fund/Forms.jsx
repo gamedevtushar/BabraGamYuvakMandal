@@ -2,13 +2,13 @@ import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { AnimatePresence, motion } from 'motion/react'
 import { addDoc, collection, doc, serverTimestamp, setDoc, updateDoc } from 'firebase/firestore'
-import { ArrowDownCircle, ArrowUpCircle, Users, KeyRound, LogIn, LogOut, Languages, SunMoon, ALargeSmall, Palette, Vibrate, ChevronRight, Download, Plus, Check, Coins } from 'lucide-react'
+import { ArrowDownCircle, ArrowUpCircle, Users, KeyRound, LogIn, LogOut, Languages, SunMoon, ALargeSmall, Vibrate, ChevronRight, Download, Plus, Check, Coins } from 'lucide-react'
 import { useAuth, roleLabel } from '../context/AuthContext'
 import { useFund } from './Context'
 import { fundDb } from '../fundStore'
 import { localDate, monthOf, total } from '../fundLedger'
-import { t, tv, displayName, locale, LangSwitch, useLang } from '../i18n'
-import { ThemeSwitch, TextSizeSwitch, PaletteGrid } from '../theme'
+import { t, tv, displayName, locale, LangSwitch } from '../i18n'
+import { ThemeSwitch, TextSizeSwitch } from '../theme'
 import { useFeedback, setFeedback } from '../lib/feedback'
 import { useInstall, promptInstall } from '../pwa'
 import { inr, periodLabel, shortDate } from '../lib/format'
@@ -21,18 +21,17 @@ export const forms={open:(type,props={})=>setCurrent({type,props,key:Math.random
 export function FormHost(){
  const [current,set]=useState(null)
  useEffect(()=>{setCurrent=set;return()=>{setCurrent=()=>{}}},[])
- const Component=current&&({quickAdd:QuickAdd,more:More,palette:PaletteSheet,password:Password,monthlyAmount:MonthlyAmount,entry:Entry,member:Member,memberHistory:MemberHistory})[current.type]
+ const Component=current&&({quickAdd:QuickAdd,more:More,password:Password,monthlyAmount:MonthlyAmount,entry:Entry,member:Member,memberHistory:MemberHistory})[current.type]
  return <AnimatePresence mode="wait">{Component&&<Component key={current.key} {...current.props} onClose={()=>set(null)}/>}</AnimatePresence>
 }
 export async function startInstall(canPrompt){if(canPrompt&&await promptInstall())return;toast.info(t('fund.installHint'),{duration:10000})}
-function PaletteSheet({onClose}){const {lang}=useLang();return <Modal title={t('palette')} onClose={onClose}><PaletteGrid lang={lang}/></Modal>}
 function QuickAdd({onClose}){
  const {isAdmin}=useAuth()
  const actions=[['entry','donations',ArrowDownCircle,'green','fund.addIn'],['entry','expenses',ArrowUpCircle,'red','fund.addOut'],['member',null,Users,'indigo','fund.addMember']]
  return <Modal title={t('quickAdd')} onClose={onClose}>{isAdmin?<div className="grid grid-cols-2 gap-2.5">{actions.map(([type,kind,Icon,tone,key],i)=><motion.button key={key} whileTap={{scale:.96}} initial={{opacity:0,y:12}} animate={{opacity:1,y:0}} transition={{delay:i*.04}} onClick={()=>forms.open(type,{kind})} className="flex flex-col items-start gap-3 rounded-2xl border border-fg/10 bg-fg/[0.04] p-4 text-left hover:bg-fg/[0.08] cursor-pointer"><IconTile icon={Icon} tone={tone}/><p className="text-sm font-semibold text-fg">{t(key)}</p></motion.button>)}</div>:<p>{t('fund.authNeeded')}</p>}</Modal>
 }
 function More({onClose}){
- const {isLoggedIn,signOut}=useAuth(),{canPrompt,installed}=useInstall(),{lang}=useLang(),sound=useFeedback(),navigate=useNavigate()
+ const {isLoggedIn,signOut}=useAuth(),{canPrompt,installed}=useInstall(),sound=useFeedback(),navigate=useNavigate()
  const {monthlyAmount}=useFund()
  const go=path=>{onClose();navigate(path)}
  const Row=({icon:Icon,label,onClick,children,danger})=><div className="flex items-center gap-3 rounded-2xl px-3 py-2.5 text-base text-fg"><IconTile icon={Icon} tone={danger?'red':'gray'} className="size-9" iconClass="size-[1.125rem]"/>{onClick?<button onClick={onClick} className={cx('flex min-w-0 flex-1 items-center justify-between py-1 text-left cursor-pointer',danger&&'text-bad')}>{label}<ChevronRight className="size-4 text-subtle"/></button>:<><span className="flex-1">{label}</span>{children}</>}</div>
@@ -41,7 +40,7 @@ function More({onClose}){
  <Row icon={Users} label={t('fund.members')} onClick={()=>go('/members')}/>{isLoggedIn&&<Row icon={Coins} label={`${t('fund.monthlyAmount')} · ${inr(monthlyAmount)}`} onClick={()=>forms.open('monthlyAmount')}/>}<div className="my-2 h-px bg-fg/10"/>
  <Row icon={Languages} label={t('language')}><LangSwitch/></Row><Row icon={SunMoon} label={t('theme')}><ThemeSwitch/></Row><Row icon={ALargeSmall} label={t('textSize')}><TextSizeSwitch/></Row>
  <Row icon={Vibrate} label={t('feedback')}><button type="button" role="switch" aria-checked={sound} aria-label={t('feedback')} onClick={()=>setFeedback(!sound)} className={cx('relative h-7 w-12 shrink-0 rounded-full transition-colors cursor-pointer',sound?'bg-accent':'bg-fg/20')}><span className={cx('absolute top-0.5 size-6 rounded-full bg-white shadow transition-all',sound?'left-[1.375rem]':'left-0.5')}/></button></Row>
- <div className="rounded-2xl px-3 py-2.5"><div className="mb-2.5 flex items-center gap-3 text-base text-fg"><IconTile icon={Palette} tone="gray" className="size-9"/><span>{t('palette')}</span></div><PaletteGrid lang={lang}/></div><div className="my-2 h-px bg-fg/10"/>
+ <div className="my-2 h-px bg-fg/10"/>
  {isLoggedIn?<><Row icon={KeyRound} label={t('changePassword')} onClick={()=>forms.open('password')}/><Row icon={LogOut} label={t('signOut')} danger onClick={async()=>{if(await confirmDialog({title:t('signOut'),message:t('confirm.signOut'),confirmText:t('signOut'),tone:'primary'})){signOut();onClose()}}}/></>:<Button size="lg" icon={LogIn} className="mt-1 w-full" onClick={()=>go('/login')}>{t('public.login')}</Button>}
  </div></Modal>
 }
@@ -88,7 +87,7 @@ function Entry({kind='donations',row,memberId='',period,onClose}){
  const options=members.map(m=>({value:m.id,label:displayName(m),hint:displayName(m)!==m.name?m.name:undefined})).sort((a,b)=>a.label.localeCompare(b.label,locale(),{sensitivity:'base'}))
  return <Modal title={t(income?(row?'fund.editIn':'fund.addIn'):(row?'fund.editOut':'fund.addOut'))} icon={income?ArrowDownCircle:ArrowUpCircle} iconTone={income?'green':'red'} onClose={close} footer={<Footer form="fund-entry" busy={busy} onClose={close}/>}><form id="fund-entry" onChange={markDirty} onSubmit={submit} className="space-y-4">
  {income?<Field label={t('fund.member')}><Select searchable options={options} value={member} onChange={value=>{markDirty();setMember(value)}} placeholder={t('fund.chooseMember')}/></Field>:<Field label={t('fund.description')}><Input aria-label={t('fund.description')} value={description} onChange={e=>setDescription(e.target.value)} maxLength={250} required autoFocus/></Field>}
- <Field label={t('amount')}><AmountInput value={amount} onChange={setAmount}/></Field><Field label={t('date')}><DateField value={date} onChange={value=>{markDirty();setDate(value)}}/></Field>
+ <Field label={t('amount')} hint={income&&!row?`${t('fund.monthlyAmount')} · ${inr(monthlyAmount)}`:undefined}><AmountInput value={amount} onChange={setAmount}/></Field><Field label={t('date')}><DateField value={date} onChange={value=>{markDirty();setDate(value)}}/></Field>
  {income?<Field label={t('paymentMode')}><Chips value={mode} onChange={value=>{markDirty();setMode(value)}} options={[['cash','Cash'],['upi','UPI'],['bank','Bank Transfer']].map(([value,label])=>({value,label:tv(label)}))}/></Field>:<Field label={t('fund.paidTo')} optional><Input aria-label={t('fund.paidTo')} value={paidTo} onChange={e=>setPaidTo(e.target.value)} maxLength={120}/></Field>}<ErrorLine error={error}/></form></Modal>
 }
 function Member({row,onClose}){
@@ -98,7 +97,7 @@ function Member({row,onClose}){
  return <Modal title={t(row?'fund.editMember':'fund.addMember')} icon={Users} onClose={close} footer={<Footer form="fund-member" busy={busy} onClose={close}/>}><form id="fund-member" onChange={markDirty} onSubmit={submit} className="space-y-4">{[['name','fund.name'],['nameGu','fund.nameGu'],['occupation','fund.occupation'],['phone','fund.phone']].map(([name,key])=><Field key={name} label={t(key)} optional={name!=='name'}><Input name={name} aria-label={t(key)} type={name==='phone'?'tel':'text'} defaultValue={name==='nameGu'?memberName(row,'gu'):row?.[name]||''} required={name==='name'} maxLength={name==='phone'?30:120}/></Field>)}<Field label={t('fund.status')}><Chips value={status} onChange={value=>{markDirty();setStatus(value)}} options={['active','inactive'].map(value=>({value,label:t(`fund.${value}`)}))}/></Field><ErrorLine error={error}/></form></Modal>
 }
 function MemberHistory({member,period,onClose}){
- const {donations}=useFund(),{isAdmin}=useAuth(),navigate=useNavigate()
+ const {donations,monthlyAmount}=useFund(),{isAdmin}=useAuth(),navigate=useNavigate()
  const rows=donations.filter(r=>r.memberId===member.id&&(!period||monthOf(r)===period)).sort((a,b)=>(b.date||'').localeCompare(a.date||''))
- return <Modal title={displayName(member)} subtitle={period?periodLabel(period):t('fund.contributions')} icon={Users} onClose={onClose} footer={isAdmin?<Button className="flex-1" icon={Plus} onClick={()=>forms.open('entry',{kind:'donations',memberId:member.id,period})}>{t('fund.addIn')}</Button>:<Button className="flex-1" icon={LogIn} onClick={()=>{onClose();navigate('/login')}}>{t('public.login')}</Button>}><div className="mb-3 rounded-xl bg-ok/10 p-3 text-right font-bold text-ok">{inr(total(rows))}</div>{rows.length?rows.map(r=><button key={r.id} disabled={!isAdmin} onClick={()=>forms.open('entry',{kind:'donations',row:r})} className="flex w-full items-center justify-between border-b border-fg/10 py-3 text-left"><span className="text-sm text-muted">{shortDate(r.date)} · {tv(({cash:'Cash',upi:'UPI',bank:'Bank Transfer'})[r.paymentMode]||r.paymentMode)}</span><strong className="text-ok">{inr(r.amount)}</strong></button>):<p className="py-5 text-center text-muted">{t('fund.noContribution')}</p>}</Modal>
+ return <Modal title={displayName(member)} subtitle={period?periodLabel(period):t('fund.contributions')} icon={Users} onClose={onClose} footer={isAdmin?<Button className="flex-1" icon={Plus} onClick={()=>forms.open('entry',{kind:'donations',memberId:member.id,period})}>{t('fund.addIn')} · {inr(monthlyAmount)}</Button>:<Button className="flex-1" icon={LogIn} onClick={()=>{onClose();navigate('/login')}}>{t('public.login')}</Button>}><div className="clay-inset mb-3 rounded-2xl p-3 text-right font-bold text-ok">{inr(total(rows))}</div>{isAdmin&&<p className="mb-3 text-sm text-muted">{t('fund.monthlyAmount')} · {inr(monthlyAmount)}</p>}{rows.length?rows.map(r=><button key={r.id} disabled={!isAdmin} onClick={()=>forms.open('entry',{kind:'donations',row:r})} className="flex w-full items-center justify-between border-b border-fg/10 py-3 text-left"><span className="text-sm text-muted">{shortDate(r.date)} · {tv(({cash:'Cash',upi:'UPI',bank:'Bank Transfer'})[r.paymentMode]||r.paymentMode)}</span><strong className="text-ok">{inr(r.amount)}</strong></button>):<p className="py-5 text-center text-muted">{t('fund.noContribution')}</p>}</Modal>
 }

@@ -341,11 +341,11 @@ export const useLang = () => useContext(LangContext)
 export function LangSwitch({ className = '' }) {
   const { lang, setLang } = useLang()
   return (
-    <div role="radiogroup" aria-label="Language" className={`inline-flex rounded-xl border border-fg/10 bg-fg/[0.04] p-0.5 ${className}`}>
+    <div role="radiogroup" aria-label="Language" className={`clay-inset inline-flex rounded-xl p-1 ${className}`}>
       {LANGUAGES.map((l) => (
         <button key={l.code} type="button" role="radio" aria-checked={lang === l.code} onClick={() => setLang(l.code)} aria-label={l.label}
           className={`relative h-8 min-w-9 rounded-lg px-2.5 text-xs font-semibold transition-colors cursor-pointer ${lang === l.code ? 'text-fg' : 'text-subtle hover:text-fg'}`}>
-          {lang === l.code && <motion.span layoutId="lang-pill" className="absolute inset-0 rounded-lg bg-surface shadow-sm ring-1 ring-fg/10" />}
+          {lang === l.code && <motion.span layoutId="lang-pill" className="clay-selected absolute inset-0 rounded-lg bg-surface" />}
           <span className="relative">{l.short}</span>
         </button>
       ))}
